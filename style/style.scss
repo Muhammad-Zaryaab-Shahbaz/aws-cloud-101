@@ -1,0 +1,150 @@
+@import url("https://fonts.googleapis.com/css2?family=Source+Sans+Pro&family=Ubuntu");
+
+* {
+  margin: 0%;
+  padding: 0%;
+  box-sizing: border-box;
+}
+
+$color-main: #212c42;
+$color-secondary: #151c2b;
+$color-btn: #525a6a;
+$color-green-light: #a3ea2a;
+$color-red-light: #eb0037;
+
+body {
+  background-color: $color-main;
+  min-height: 100vh;
+  color: #ececec;
+  font-family: "Source Sans Pro", "Ubuntu", sans-serif !important;
+}
+
+@import "./modules/header";
+
+// wraper layout
+.wrapper {
+  border: 1px solid #ececec;
+  background-color: $color-main;
+  min-height: 95vh;
+  border-radius: 10px;
+}
+
+.offical-header {
+  background-color: $color-secondary;
+  border-bottom: 0.1px solid #ececec7a;
+}
+
+// ultilities
+.checked-icons {
+  color: $color-green-light;
+  font-size: 1.5rem;
+}
+.green-light {
+  color: $color-green-light;
+}
+.red-light {
+  color: $color-red-light;
+}
+
+.bg-green-light {
+  background-color: $color-green-light;
+}
+.popUp {
+  background-color: $color-secondary;
+}
+.progress-container {
+  background-color: $color-secondary;
+}
+
+.font-heading {
+  font-size: calc(1.325rem + 0.9vw);
+  font-weight: 500;
+  font-family: "Source Sans Pro", "Ubuntu", sans-serif !important;
+}
+
+.btn-container {
+  width: 100%;
+  text-align: center;
+  padding: 1rem;
+  margin-top: 1rem;
+
+  button,
+  input[type="submit"] {
+    cursor: pointer;
+    background-color: $color-btn;
+    width: 50%;
+    margin: auto;
+    padding: 0.5rem 0;
+    transition: 0.3s all ease-in-out;
+    border-radius: 10px;
+    font-weight: 400;
+    border: none;
+    color: #ececec;
+    font-size: 1.2rem;
+    font-family: "Source Sans Pro", "Ubuntu", sans-serif !important;
+
+    &:hover {
+      background-color: #212c42;
+      border: 1px solid #ececec;
+    }
+
+    &:active {
+      outline: none;
+    }
+  }
+}
+.btn-container-2 {
+  width: 100%;
+  text-align: center;
+
+  button,
+  input[type="submit"] {
+    cursor: pointer;
+    background-color: $color-btn;
+    width: 100%;
+    margin: auto;
+    padding: 0.5rem 0;
+    transition: 0.3s all ease-in-out;
+    border-radius: 10px;
+    font-weight: 400;
+    border: none;
+    color: #ececec;
+    font-size: 1.2rem;
+    font-family: "Source Sans Pro", "Ubuntu", sans-serif !important;
+
+    &:hover {
+      background-color: #212c42;
+      outline: 1px solid #ececec;
+      border: none;
+    }
+
+    &:active {
+      border: none;
+    }
+  }
+}
+
+.slide-bottom {
+  -webkit-animation: slide-bottom 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  animation: slide-bottom 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+@keyframes slide-bottom {
+  0% {
+    -webkit-transform: translateY(-100px);
+    transform: translateY(-100px);
+  }
+  100% {
+    -webkit-transform: translateY(0px);
+    transform: translateY(0px);
+  }
+}
+
+@media screen and (max-width: 750px) {
+  .btn-container {
+    button,
+    input[type="submit"] {
+      width: 80%;
+    }
+  }
+}
