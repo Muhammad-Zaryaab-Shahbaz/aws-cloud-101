@@ -15,9 +15,16 @@ const finalResult = { devopsResult, softEngResult, financeResult };
 
 // screens utilties
 let screen = 1;
+
 const screenShow = (num) => {
   screen = num;
   modulesHandler();
+};
+const showRooms = (value) => {
+  if (value === 3) screenShow(3);
+  else if (value === 4) screenShow(4);
+  else if (value === 5) screenShow(5);
+  else if (value === 6) screenShow(6);
 };
 const allCasesFn = (caseNo) => {
   if (caseNo === 0) allCases.forEach((el) => (el.style.opacity = ".8"));
@@ -62,6 +69,7 @@ const questionare = {
         "The website will be accessible from all over the world - Shall we deploy all the infrastructure on our premises or go for cloud services?",
       prompts: ["On-Premises", "Cloud"],
       answer: "Cloud",
+      image: "dev",
     },
     {
       stage: 2,
@@ -74,6 +82,7 @@ const questionare = {
       ],
       answer:
         "Lesser latency rate for website users and easy scalability as the userbase grows.",
+      image: "dev",
     },
   ],
   softEngineering: [
@@ -83,6 +92,7 @@ const questionare = {
         "The software engineering team mentioned that the complete team is housed in   California (USA). Therefore they need a high-availability server in that region. In case AWS is selected as a cloud service provider, what would be the naming  convention for that region?",
       prompts: ["af", "eu", "us"],
       answer: "us",
+      image: "softEng",
     },
     {
       stage: false,
@@ -90,6 +100,7 @@ const questionare = {
         "Which of the following service will be used to route traffic based on users’ geolocation?",
       prompts: ["EC2", "Route 53", "RDS"],
       answer: "Route 53",
+      image: "softEng",
     },
     {
       stage: false,
@@ -97,6 +108,7 @@ const questionare = {
         "In line with Jeff Bezos's model at Amazon, each developer of our software team will expose the data to other members through a service interface called?",
       prompts: ["USB", "API", "Email"],
       answer: "API",
+      image: "softEng",
     },
   ],
   finance: [
@@ -106,42 +118,157 @@ const questionare = {
         "The payment will be made to cloud service providers on a pay-as-you-go model, and the infrastructure will be expanded per the needs. Which of the following expense is optimally used in this case?",
       prompts: ["Operational", "Optional"],
       answer: "Optional",
+      image: "finance",
     },
   ],
 };
-const questionPopUpTemps = (obj) => {
-  return `
-<div class="absolute top-2 left-2 btn-container-2 w-32 z-10">
-
-  <button onclick="screenShow(2)" class="w-9 flex gap-2 items-center justify-center"><i class="fa-solid fa-chevron-left"></i> <b>Home</b></button>
-</div>
-<div class="flex-1 absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center">
-  <div class="w-1/2 m-r-auto border rounded-lg popUp opacity-100 slide-bottom p-2 relative">
-    ${
-      obj?.stage
-        ? `<span class="absolute bg-green-light -top-3 -right-2 px-2 py-1 rounded-lg font-normal" >Stage : <b> ${obj.stage}</b></span >`
-        : ""
-    }
-    <div class="flex items-start gap-4 py-4 px-6 border-b">
-      <p>Question:</p>
-      <h2 class="text-xl">${obj.question}</h2>
+const showQuizQuestion = (arr) => {
+  if (arr.length === 2) {
+    return `
+    <div class="quiz__options-container ">
+        
+    <div class="quiz__options" data-id="${arr[0]}">
+    <p>${arr[0]}</p>
+    <div class="quiz__options__slides"></div>
+    <div class="quiz__options__slides"></div>
+    <div class="line-show-2 line-no-1"></div>
     </div>
-    <div
-      class="grid grid-cols-1 gap-4 p-2 items-center justify-center"
-    >
-      ${obj.prompts
-        .map((el) => {
-          return `
-      <div class="btn-container-2 options-quiz px-1  w-full" data-id="${el}">
-        <button class="">${el}</button>
+    <div class="quiz__options" data-id="${arr[1]}">
+    <p>${arr[1]}</p>
+    <div class="quiz__options__slides"></div>
+    <div class="quiz__options__slides"></div>
+    <div class="line-show-2 line-no-2"></div>
+    </div>
+    </div>
+  `;
+  }
+  if (arr.length === 3) {
+    return `
+<div class="quiz__options-container">
+    <div class="quiz__options" data-id="${arr[0]}">
+        <p>${arr[0]}</p>
+        <div class="quiz__options__slides"></div>
+        <div class="quiz__options__slides"></div>
+        <div class="line-show-2 line-no-1"></div>
+    </div>
+    <div class="quiz__options" data-id="${arr[1]}">
+        <p>${arr[1]}</p>
+        <div class="quiz__options__slides"></div>
+        <div class="quiz__options__slides"></div>
+        <div class="line-show-2 line-no-2"></div>
+    </div>
+ </div>
+  <div class="quiz__options-container special-quiz__options-container">
+  <div class="quiz__options" data-id="${arr[2]}">
+  <p>${arr[2]}</p>
+  <div class="quiz__options__slides"></div>
+  <div class="quiz__options__slides"></div>
+  <div class="line-show-2 special-line-no-3"></div>
+</div>
+  </div>
+
+  `;
+  }
+  if (arr.length === 4) {
+    return `
+    <div class="quiz__options-container">        
+      <div class="quiz__options" data-id="${arr[0]}">
+          <p>${arr[0]}</p>
+          <div class="quiz__options__slides"></div>
+          <div class="quiz__options__slides"></div>
+          <div class="line-show-2 line-no-1"></div>
       </div>
-      `;
-        })
-        .join("")}
+      <div class="quiz__options" data-id="${arr[1]}">
+          <p>${arr[1]}</p>
+          <div class="quiz__options__slides"></div>
+          <div class="quiz__options__slides"></div>
+          <div class="line-show-2 line-no-2"></div>
+      </div>
+  <div class="quiz__options" data-id="${arr[2]}">
+      <p>${arr[2]}</p>
+      <div class="quiz__options__slides"></div>
+      <div class="quiz__options__slides"></div>
+      <div class="line-show-2 line-no-3"></div>
+  </div>
+  <div class="quiz__options" data-id="${arr[4]}">
+      <p>${arr[4]}</p>
+      <div class="quiz__options__slides"></div>
+      <div class="quiz__options__slides"></div>
+      <div class="line-show-2 line-no-4"></div>
+  </div>
+    </div>
+  `;
+  }
+};
+const questionPopUpTemps = (obj) => {
+  // if (!obj?.image) return;
+  return `
+<div class="absolute top-2 left-2 btn-container-2 w-32 z-10 ">
+
+  <button onclick="screenShow(2)" class="w-9 flex gap-2 items-center justify-center">
+    <i class="fa-solid fa-chevron-left"></i> <b>Home</b>
+  </button>
+</div>
+<div class='room-back-image'>
+<img src="./assests/images/rooms/${obj?.image}.png"/>
+</div>
+
+<div class="flex-1 absolute top-0 left-0 w-full h-full flex items-center justify-center mt-2">
+
+  <div class="m-auto rounded-lg slide-bottom quiz__container opacity-0 -z-10">
+  ${
+    obj?.stage
+      ? `<span class="absolute bg-green-light -top-3 -right-2 px-2 py-1 rounded-lg font-normal z-30" >Stage : <b> ${obj.stage}</b></span >`
+      : ""
+  }
+    <div class="quiz">
+      <div class="quiz__question">
+        <h5 class="font-heading">${obj.question}</h5>
+        <div class="quiz__slides"></div>
+        <div class="quiz__slides"></div>
+        <div class="line-show"></div>
+      </div>
+
+      ${showQuizQuestion(obj.prompts)}
+    
     </div>
   </div>
 </div>
     `;
+};
+const progressBar = () => {
+  const percentage =
+    finalResult.devopsResult.atemps.length +
+    finalResult.financeResult.atemps.length +
+    finalResult.softEngResult.atemps.length;
+
+  if (document.querySelector(".custom-progress-bar")) {
+    document.querySelector(".custom-progress-bar").remove();
+  }
+  console.log(percentage);
+  const html = `
+  <div class="w-1/2 mr-auto ml-auto mt-4 custom-progress-bar">
+      <div class="w-full  rounded-full  relative py-4 bg-white">
+        <h3 class="text-2xl green-light  text-center font-medium w-full h-full z-10 absolute top-0 left-0 w-full h-full">
+        ${((percentage / 6) * 100).toFixed(0)}%
+        </h3>
+        <div class="absolute top-0 left-0 h-full progress-container text-center p-0.5 leading-none rounded-full" style=display:${
+          percentage === 0 ? "none !important" : "block"
+        }
+       >
+        </div>
+      </div>
+    </div>
+  
+  `;
+
+  document
+    .querySelector(".special-section")
+    .insertAdjacentHTML("afterbegin", html);
+  document.querySelector(".progress-container").style.width = `${(
+    (percentage / 6) *
+    100
+  ).toFixed(2)}%`;
 };
 
 // first screen templates and handler
@@ -184,7 +311,7 @@ const firstScreenHandler = () => {
     screenShow(2);
     popUpOffical(
       "Introduction",
-      "In this level, Santas security is focused on the perimeter. Given that, we can expect that there may be complete trust within the compound."
+      "In this level, Solved all the questions, to open CEO Office."
     );
   });
 };
@@ -192,75 +319,41 @@ const firstScreenHandler = () => {
 // Second screen templates and handler
 const secondScreenTemp = () => {
   return `
-    <div class=" absolute top-2/4 left-2/4 -translate-x-1/2 -translate-y-1/2 w-full">
-       <div class="w-1/2 grid grid-cols-2 gap-8  m-auto">
-           <div id="room-ceo" class="rooms w-full h-20 flex items-center flex-col justify-center bg-black">
-              <i class="fa-solid fa-${
-                devopsQuiz && financeQuiz && softEngQuiz
-                  ? "lock-open green-light"
-                  : "lock red-light"
-              } mb-2"></i>
-              <h3>CEOs room</h3>
-           </div>
-           <div id="room-devops" class="rooms w-full h-20  flex items-center justify-center flex-col bg-black relative">
-              ${
-                devopsQuiz
-                  ? `<i class="fa-sharp fa-solid fa-square-check absolute  top-0 right-0 rounded-lg font-normal checked-icons"></i>`
-                  : ""
-              }
-              
-              <i class="fa-solid  fa-${
-                devopsQuiz ? "lock red-light" : "lock-open green-light"
-              } mb-2"></i>
-              <h3>DevOps Team</h3>
-           </div>
-           <div id="room-softengineer" class="rooms w-full h-20 flex flex-col items-center justify-center bg-black relative">
-              ${
-                softEngQuiz
-                  ? `<i class="fa-sharp fa-solid fa-square-check absolute  top-0 right-0 rounded-lg font-normal checked-icons"></i>`
-                  : ""
-              }
-              <i class="fa-solid  fa-${
-                softEngQuiz ? "lock red-light" : "lock-open green-light"
-              } mb-2"></i>
-              <h3>Software Engineering Team</h3>
-           </div>
-           <div id="room-finance" class="rooms w-full h-20 flex flex-col items-center justify-center bg-black relative">
-              ${
-                financeQuiz
-                  ? `<i class="fa-sharp fa-solid fa-square-check absolute  top-0 right-0 rounded-lg font-normal checked-icons"></i>`
-                  : ""
-              }
-              <i class="fa-solid  fa-${
-                financeQuiz ? "lock red-light" : "lock-open green-light"
-              } mb-2"></i>
-              <h3>Finance Team</h3>
-           </div>
-       </div>
-
-      <div class="w-1/2 mr-auto ml-auto mt-4 ">
-        <div class="w-full bg-gray-200 rounded-full dark:bg-gray-700">
-              <div class=" text-xs font-medium progress-container text-center p-0.5 leading-none rounded-full" style="width: 45%"> 45%</div>
+<div class="absolute top-2/4 left-2/4 -translate-x-1/2 -translate-y-1/2 w-full overflow-auto">
+    <div class="main-image-container" 
+      onmousemove="perimeterMouseover(event)">
+      <img
+        src="./assests/images/full_office.png"
+        class="main-image-container__bg"
+        alt="full_office"
+      />
+      <img
+        id="ceoRoom"
+        src="./assests/images/highlighted_ceo.png"
+        class="main-image-container__overlay overlay-image"
+        alt="highlighted_ceo"
+        />
+        <img
+          id="devRoom"
+          src="./assests/images/highlighted_dev.png"
+          class="main-image-container__overlay overlay-image"
+          alt="highlighted_dev"
+        />
+        <img
+        id="seRoom"
+        src="./assests/images/highlighted_software_engineering.png"
+        class="main-image-container__overlay overlay-image"
+        alt="highlighted_software_engineering"
+        />
+        <img
+        id="financeRoom"
+        src="./assests/images/highlighted_finance.png"
+        class="main-image-container__overlay overlay-image"
+        alt="highlighted_finance"
+        />
         </div>
-      </div>
-   
-   </div>
-`;
-};
-
-const showRooms = (e) => {
-  if (e.target.id == "room-ceo")
-    popUpOffical(
-      "Room",
-      "The CEO room is closed. First complete the questionare."
-    );
-  else if (e.target.id == "room-devops" && devopsQuiz === false) {
-    screenShow(3);
-  } else if (e.target.id == "room-softengineer" && softEngQuiz === false) {
-    screenShow(4);
-  } else if (e.target.id == "room-finance" && financeQuiz === false) {
-    screenShow(5);
-  }
+  </div>
+    `;
 };
 
 const secondScreenHandler = () => {
@@ -270,11 +363,14 @@ const secondScreenHandler = () => {
   // adding templates to container
   const container = document.querySelector("#main-content");
   container.innerHTML = "";
-  mainHeading.innerHTML = "AWS Cloud";
+  mainHeading.innerHTML = "AWS Cloud 101";
   container.insertAdjacentHTML("afterbegin", temp);
+  progressBar();
 
-  const rooms = document.querySelectorAll(".rooms");
-  rooms.forEach((element) => element.addEventListener("click", showRooms));
+  const rooms = document.querySelectorAll(".overlay-image");
+  rooms.forEach((element, i) =>
+    element.addEventListener("click", () => showRooms(i + 3))
+  );
   const logContainer = document.querySelector(".image-container");
   logContainer.innerHTML = `
           <img
@@ -288,15 +384,23 @@ const secondScreenHandler = () => {
 // devops screen templates and handler
 let devopsQuestionNo = 1;
 const devOpsScreenHandler = () => {
+  if (devopsQuiz) return;
   let question = questionare.DevOps[devopsQuestionNo - 1];
   const temp = questionPopUpTemps(question);
 
   const container = document.querySelector("#main-content");
-  container.innerHTML = "";
-  mainHeading.innerHTML = "DevOps";
-  container.insertAdjacentHTML("afterbegin", temp);
 
-  const options = document.querySelectorAll(".options-quiz");
+  container.innerHTML = "";
+  mainHeading.innerHTML = "Dev Ops";
+  container.insertAdjacentHTML("afterbegin", temp);
+  progressBar();
+
+  const quizShow = document.querySelector(".quiz__container");
+  setTimeout(() => {
+    quizShow.style.opacity = "1";
+    quizShow.style.zIndex = "1";
+  }, 500);
+  const options = document.querySelectorAll(".quiz__options");
   options.forEach((el) => {
     el.addEventListener("click", () => {
       if (question.answer === el.dataset.id) {
@@ -329,6 +433,7 @@ const devOpsScreenHandler = () => {
 // software Engineer screen templates and handler
 let softEngQuestionNo = 1;
 const softEngScreenHandler = () => {
+  if (softEngQuiz) return;
   let question = questionare.softEngineering[softEngQuestionNo - 1];
   const temp = questionPopUpTemps(question);
 
@@ -336,8 +441,16 @@ const softEngScreenHandler = () => {
   container.innerHTML = "";
   mainHeading.innerHTML = "Software Engineering";
   container.insertAdjacentHTML("afterbegin", temp);
+  progressBar();
 
-  const options = document.querySelectorAll(".options-quiz");
+  const quizShow = document.querySelector(".quiz__container");
+  setTimeout(() => {
+    quizShow.style.opacity = "1";
+    quizShow.style.zIndex = "1";
+  }, 500);
+
+  const options = document.querySelectorAll(".quiz__options");
+
   options.forEach((el) => {
     el.addEventListener("click", () => {
       if (question.answer === el.dataset.id) {
@@ -371,15 +484,23 @@ const softEngScreenHandler = () => {
 let financeQuestionNo = 1;
 const financeScreenHandler = () => {
   // generating templates
+  if (financeQuiz) return;
   let question = questionare.finance[financeQuestionNo - 1];
   const temp = questionPopUpTemps(question, "Finance");
   // adding templates to container
   const container = document.querySelector("#main-content");
   container.innerHTML = "";
-  mainHeading.innerHTML = "Finance";
+  mainHeading.innerHTML = "Finance Team";
   container.insertAdjacentHTML("afterbegin", temp);
+  progressBar();
 
-  const options = document.querySelectorAll(".options-quiz");
+  const quizShow = document.querySelector(".quiz__container");
+  setTimeout(() => {
+    quizShow.style.opacity = "1";
+    quizShow.style.zIndex = "1";
+  }, 500);
+
+  const options = document.querySelectorAll(".quiz__options");
   options.forEach((el) => {
     el.addEventListener("click", () => {
       if (question.answer === el.dataset.id) {
@@ -397,14 +518,180 @@ const financeScreenHandler = () => {
     });
   });
 };
+const ceoCoords = [{ x: [76, 250], y: [168, 239] }];
+const seCoords = [{ x: [212, 470], y: [106, 148] }];
+const financeCoords = [{ x: [182, 450], y: [288, 340] }];
+const devCoords = [{ x: [424, 586], y: [150, 276] }];
 
+const toggleZIndex = (elem, value = false) => {
+  let zIndex = "-1";
+  if (value) {
+    zIndex = "1";
+  }
+  if (elem.style.zIndex !== zIndex) {
+    elem.style.zIndex = zIndex;
+  }
+};
+
+const perimeterMouseover = (event) => {
+  const { offsetX, offsetY } = event;
+  const base = { offsetX, offsetY };
+
+  const ceoRoom = document.getElementById("ceoRoom");
+  const seRoom = document.getElementById("seRoom");
+  const financeRoom = document.getElementById("financeRoom");
+  const devRoom = document.getElementById("devRoom");
+
+  if (isWithin(base, ceoCoords)) {
+    toggleZIndex(ceoRoom, true);
+    return;
+  } else {
+    toggleZIndex(ceoRoom, false);
+  }
+
+  if (isWithin(base, seCoords)) {
+    toggleZIndex(seRoom, true);
+    return;
+  } else {
+    toggleZIndex(seRoom, false);
+  }
+
+  if (isWithin(base, financeCoords)) {
+    toggleZIndex(financeRoom, true);
+    return;
+  } else {
+    toggleZIndex(financeRoom, false);
+  }
+
+  if (isWithin(base, devCoords)) {
+    toggleZIndex(devRoom, true);
+    return;
+  } else {
+    toggleZIndex(devRoom, false);
+  }
+
+  return;
+
+  /* if (isWithin(base, coordinates.ceo)) {
+    console.log("Area visbale position Ceo");
+    showImage(0);
+    // popUpOffical(
+    //   "Warning",
+    //   "The CEO room is closed. First complete the questionare."
+    // );
+  }
+
+  if (isWithin(base, coordinates.softEng)) {
+    // screenShow(4);
+    showImage(3);
+    console.log("Area visbale position SoftEng");
+  }
+  if (isWithin(base, coordinates.finance)) {
+    // screenShow(5);
+    showImage(2);
+    console.log("Area visbale position finance");
+  }
+  if (isWithin(base, coordinates.dev)) {
+    // screenShow(3);
+    showImage(1);
+    console.log("Area visbale position dev");
+  } */
+};
+
+const isWithin = (event, coords) => {
+  const { offsetX, offsetY } = event;
+  if (typeof coords[0] === "number") {
+    // [x1, x2, y1, y2]
+    return (
+      offsetX >= coords[0] &&
+      offsetX <= coords[1] &&
+      offsetY >= coords[2] &&
+      offsetY <= coords[3]
+    );
+  }
+
+  let within = false;
+  for (let coord of coords) {
+    const x = coord.x;
+    const y = coord.y;
+    if (
+      offsetX >= x[0] &&
+      offsetX <= x[1] &&
+      offsetY >= y[0] &&
+      offsetY <= y[1]
+    ) {
+      within = true;
+      break;
+    }
+  }
+
+  return within;
+};
+
+// ceo screen handler and templates
+
+const ceoScreenTemp = () => {
+  console.log(finalResult);
+  return "<h1>ceo room opend<h1/>";
+};
+const ceoScreenHandler = () => {
+  // generating templates
+  if (devopsQuiz && softEngQuiz && financeQuiz) {
+    const temp = ceoScreenTemp();
+    const container = document.querySelector("#main-content");
+    container.innerHTML = "";
+    container.insertAdjacentHTML("afterbegin", temp);
+  } else {
+    popUpOffical(
+      "Warning",
+      "The CEO room is closed. First complete the questionare."
+    );
+  }
+};
 // main handler for all modules
 function modulesHandler() {
   if (screen === 1) firstScreenHandler();
   else if (screen === 2) secondScreenHandler();
-  else if (screen === 3) devOpsScreenHandler();
-  else if (screen === 4) softEngScreenHandler();
-  else if (screen === 5) financeScreenHandler();
+  else if (screen === 3) ceoScreenHandler();
+  else if (screen === 4) devOpsScreenHandler();
+  else if (screen === 5) softEngScreenHandler();
+  else if (screen === 6) financeScreenHandler();
   else return;
 }
+
 modulesHandler();
+
+// mockup for second screen
+// const secondScreenTemp = () => {
+//   return `
+//   <div class="absolute top-2/4 left-2/4 -translate-x-1/2 -translate-y-1/2 w-full" >
+//     <div class="w-1/2 grid grid-cols-2 m-auto bg-red-500">
+
+//       <div  class="w-full flex items-center flex-col justify-center relative">
+//         <img id="room-ceo" class="rooms bg-green-500" src="./assests/aws-imgs/use/ceo-2.jpeg" />
+//       </div>
+
+//       <div  class="w-full flex flex-col items-center justify-center relative">
+//         <img class="rooms" id="room-softengineer" src="./assests/aws-imgs/use/softEng.jpeg" />
+//       </div>
+
+//       <div  class="w-full flex flex-col items-center justify-center relative">
+//         <img class="rooms" id="room-finance" src="./assests/aws-imgs/use/finance.jpeg" />
+//       </div>
+
+//       <div  class="w-full flex items-center justify-center flex-col relative">
+//         <img class="rooms" id="room-devops" src="./assests/aws-imgs/use/dev.jpeg" />
+//       </div>
+
+//     </div>
+
+//     <div class="w-1/2 mr-auto ml-auto mt-4">
+//       <div class="w-full bg-gray-200 rounded-full dark:bg-gray-700">
+//         <div class="text-xs font-medium progress-container text-center p-0.5 leading-none rounded-full" style="width: 45%">
+//           45%
+//         </div>
+//       </div>
+//     </div>
+// </div>
+//   `;
+// };
