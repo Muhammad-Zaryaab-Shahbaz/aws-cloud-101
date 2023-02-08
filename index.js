@@ -3,6 +3,7 @@ const mainHeading = document.querySelector(".heading-main");
 const allCases = document.querySelectorAll("#cases");
 const header = document.querySelector(".header-content");
 const officalHeader = document.querySelector(".offical-header");
+const body = document.querySelector(".body");
 
 // global
 let devopsQuiz = false;
@@ -43,7 +44,7 @@ let questionare = {
     {
       stage: false,
       question:
-        "The software engineering team mentioned that the complete team is housed in   California (USA). Therefore they need a high-availability server in that region. In case AWS is selected as a cloud service provider, what would be the naming  convention for that region?",
+        "The software engineering team mentioned that the complete team is housed in California (USA). Therefore they need a high-availability server in that region. In case AWS is selected as a cloud service provider, what would be the naming  convention for that region?",
       prompts: ["af", "eu", "us"],
       answer: "us",
       image: "softEng",
@@ -102,7 +103,7 @@ const messagePopup = (lost, message) => {
   <div class="flex items-center flex-col justify-center">
       <p class="px-5 py-4 font-bold">${message}</p>
       <div class="btn-container-2" style="width: 96%; margin: 0.5rem; margin-top:0%">
-          <button onClick="goToHomePageAfterLosing(true)" class="text-2xl" style="border-radius:6px">Please restart </button>
+          <button onClick="goToHomePageAfterLosing(true)" class="text-2xl" style="border-radius:6px">Restart</button>
       </div>
   </div>
       `;
@@ -115,10 +116,13 @@ const messagePopup = (lost, message) => {
   }
 };
 const popUpOffical = (heading, message, lost, timer) => {
+  if (document.querySelector(".popup-container")) {
+    document.querySelector(".popup-container").remove();
+  }
   const body = document.querySelector(".body");
   const popupTemp = `
 <div class="fixed top-0 left-0 w-full   min-h-screen z-10 flex justify-center items-center popup-container">
-    <div class="w-2/5 m-r-auto -mt-10  border rounded-lg popUp opacity-100 slide-bottom">
+    <div class="w-full md:w-2/5 m-r-auto -mt-10  border rounded-lg popUp opacity-100 slide-bottom">
         <div class="flex items-center justify-between py-3 px-5  border-b">
             <h2 class="text-2xl font-bold">${heading}</h2>
             <i class="fa-solid fa-xmark cursor-pointer text-2xl opacity-60 hover:opacity-100 popup-close"></i>
@@ -149,6 +153,10 @@ const popUpOffical = (heading, message, lost, timer) => {
 
     totalSeconds = 15;
     popContainer.remove();
+
+    if (currPopupMsg === 4 || currPopupMsg > 3) {
+      location.reload();
+    }
   });
 };
 
@@ -234,11 +242,6 @@ const showQuizQuestion = (arr) => {
 const questionPopUpTemps = (obj) => {
   // if (!obj?.image) return;
   return `
-<div class="absolute top-2 left-2 btn-container-2 w-32 z-10 ">
-  <button onclick="goToFromQuiz()" class="w-9 flex gap-2 items-center justify-center">
-    <i class="fa-solid fa-chevron-left"></i> <b>Home</b>
-  </button>
-</div>
 
 <div class='room-back-image'>
 <img src="./assests/images/rooms/${obj?.image}.png"/>
@@ -481,11 +484,14 @@ const firstScreenTemp = () => {
         <li class="mb-3 leading-6">You have been tasked to develop a social media interaction website
             where users can communicate with each other (More or fewer features of Twitter and
             Facebook. You are tasked to get input from all the teams, prepare a feasibility report,
-            and present it to the CEO. You will visit each department and will be asking certain
-            questions.
+            and present it to the CEO. 
         </li>
-        
-
+        <li class="mb-3 leading-6">You will visit each department and will be asking certain questions.
+        </li>
+        <li class="mb-3 leading-6">You will only be given 15 seconds to answer each question.
+        </li>
+        <li class="mb-3 leading-6">In case of running out of time, you get a penalty. Your game will be over after three penalties.
+        </li>
     </ul>
     <div class="btn-container mt-8">
         <button class="start-btn">Start</button>
@@ -840,21 +846,102 @@ const financeScreenHandler = () => {
 };
 
 // ceo screen handler and templates
-const ceoScreenTemp = () => {
-  console.log(finalResult);
+let questionNo = 0;
+const questionAnswerReport = (questions) => {
+  return questions.map((el, i) => {
+    questionNo = questionNo + 1;
+    return `
+      <div class=" block mb-5">
+      <b class="text-xl">Question No ${questionNo}</b>
+      <span class="block typing-slider">
+        <h4 class="text-xl">
+          ${el.question}
+        </h4>
+        <b class="green-light">${el.answer}</b>
+      </span>
+    </div>
+      `;
+  });
+};
+
+const ceoScreenTemp = (data, heading) => {
   return `
-<div class="ceo-container w-full flex items-center justify-center flex-1">
-    <img src="./assests/images/rooms/ceo.png" alt="ceo-room-image" class="mt-8"/>
+<div class="ceo-container w-full flex items-center justify-center flex-1" >
+  <img src="./assests/images/rooms/ceo.png" alt="ceo-room-image" class="mt-8"/>
+</div>
+
+<div class="absolute top-2/4 -translate-y-2/4	 -translate-x-2/4		left-2/4	 w-full  flex justify-center items-center popup-container ceoroom-popup-container opacity-90">
+  <div class="w-4/5 m-r-auto -mt-10 border rounded-lg popUp opacity-100 slide-bottom p-8">
+    <div class="feasibility-report">
+      <h2 class="text-3xl font-bold text-center green-light mb-6">
+        Feasibility Report
+      </h2>
+    </div>
+    <div class="">
+    <span class="absolute bg-green-light  top-3 right-2 lg:-top-3 lg:-right-2 px-2 py-1 font-bold text-2xl rounded-lg font-normal z-30" >${currPopupMsg}/3</span >
+    <h2 class="text-3xl mb-3 font-bold text-center">${heading}</h2>
+    ${questionAnswerReport(data).join("")}
+    </div>
+
+    <div class="btn-container-2 w-1/2 m-auto mt-4">
+        <button class="next-btn">Next</button>
+    </div>
+
+  </div>
 </div>
   `;
 };
+const goToNextStep = () => {
+  const btn = document.querySelector(".next-btn");
+  btn.addEventListener("click", () => {
+    currPopupMsg = currPopupMsg + 1;
+    ceoScreenHandler();
+  });
+};
+
+let currPopupMsg = 1;
 const ceoScreenHandler = () => {
   // generating templates
   if (devopsQuiz && softEngQuiz && financeQuiz) {
-    const temp = ceoScreenTemp();
-    const container = document.querySelector("#main-content");
-    container.innerHTML = "";
-    container.insertAdjacentHTML("afterbegin", temp);
+    if (currPopupMsg === 1) {
+      const temp = ceoScreenTemp(questionare.DevOps, "DevOps");
+      const container = document.querySelector("#main-content");
+      container.innerHTML = "";
+      container.insertAdjacentHTML("afterbegin", temp);
+      goToNextStep();
+      return;
+    } else if (currPopupMsg === 2) {
+      const temp = ceoScreenTemp(
+        questionare.softEngineering,
+        "Software Engineer"
+      );
+      const container = document.querySelector("#main-content");
+      container.innerHTML = "";
+      container.insertAdjacentHTML("afterbegin", temp);
+      goToNextStep();
+      return;
+    } else if (currPopupMsg === 3) {
+      const temp = ceoScreenTemp(questionare.finance, "Finance");
+      const container = document.querySelector("#main-content");
+      container.innerHTML = "";
+      container.insertAdjacentHTML("afterbegin", temp);
+      goToNextStep();
+      // setTimeout(() => {
+      //   currPopupMsg = 4;
+      //   ceoScreenHandler();
+      // }, 3000);
+    } else {
+      const html = `
+      <div class="ceo-container w-full flex items-center justify-center flex-1" >
+        <img src="./assests/images/rooms/ceo.png" alt="ceo-room-image" class="mt-8"/>
+      </div>
+      `;
+      const container = document.querySelector("#main-content");
+      container.innerHTML = "";
+      container.insertAdjacentHTML("afterbegin", html);
+      popUpOffical("Flag", "thm");
+      return;
+    }
   } else {
     popUpOffical(
       "Warning",

@@ -34,6 +34,12 @@ body {
   color: #a3ea2a;
 }
 
+.grey-light {
+  background-color: #525a6a;
+  padding: 0.5rem;
+  display: inline-block;
+}
+
 .red-light {
   color: #eb0037;
 }
@@ -310,6 +316,32 @@ body {
      object-fit: cover;
 }
 
+@keyframes typing {
+  from {
+    width: 100%;
+  }
+  90%, to {
+    width: 0;
+  }
+}
+.typing-slider {
+  position: relative;
+}
+
+.typing-slider h4 {
+  animation: slide 4s;
+}
+
+.typing-slider h4::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #151c2b;
+  animation: typing 4s, cursor 4s;
+}
+
 @media screen and (max-width: 1750px) {
   .line-no-1,
   .line-no-3 {
@@ -331,6 +363,9 @@ body {
   }
 }
 @media screen and (max-width: 1200px) {
+  .offical-header {
+    padding: 1.2rem 0;
+  }
   .line-no-2 {
     width: 122.4%;
   }
@@ -350,8 +385,44 @@ body {
   .quiz__options-container {
     width: 90%;
   }
+  .ceoroom-popup-container {
+    position: relative !important;
+    left: 0% !important;
+    width: 100% !important;
+    transform: translate(0%) !important;
+  }
+  .ceoroom-popup-container .popUp {
+    margin: 0%;
+    border-radius: 0%;
+    width: 100%;
+  }
+  .ceo-container {
+    position: absolute;
+    top: 0%;
+    left: 0%;
+  }
 }
 @media screen and (max-width: 750px) {
+  body {
+    padding: 0% !important;
+  }
+  .wrapper {
+    border: none;
+  }
+  .offical-header {
+    padding: 0.5rem 0 !important;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+  }
+  .offical-header .image-container {
+    position: relative;
+    margin-bottom: 0.8rem;
+  }
+  .main-image-container {
+    width: 600px !important;
+  }
   .btn-container button,
   .btn-container input[type=submit] {
     width: 80%;
