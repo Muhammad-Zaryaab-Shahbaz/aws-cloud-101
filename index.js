@@ -1,6 +1,8 @@
 const wrapper = document.querySelector(".wrapper");
 const mainHeading = document.querySelector(".heading-main");
 const allCases = document.querySelectorAll("#cases");
+const header = document.querySelector(".header-content");
+const officalHeader = document.querySelector(".offical-header");
 
 // global
 let devopsQuiz = false;
@@ -11,57 +13,9 @@ let devopsResult = { atemps: [], state: [] };
 let softEngResult = { atemps: [], state: [] };
 let financeResult = { atemps: [], state: [] };
 
-const finalResult = { devopsResult, softEngResult, financeResult };
+let finalResult = { devopsResult, softEngResult, financeResult };
 
-// screens utilties
-let screen = 1;
-
-const screenShow = (num) => {
-  screen = num;
-  modulesHandler();
-};
-const showRooms = (value) => {
-  if (value === 3) screenShow(3);
-  else if (value === 4) screenShow(4);
-  else if (value === 5) screenShow(5);
-  else if (value === 6) screenShow(6);
-};
-const allCasesFn = (caseNo) => {
-  if (caseNo === 0) allCases.forEach((el) => (el.style.opacity = ".8"));
-};
-const popUpOffical = (heading, message) => {
-  const body = document.querySelector(".body");
-  const popupTemp = `
-<div class="fixed top-0 left-0 w-full   min-h-screen z-10 flex justify-center items-center popup-container">
-    <div class="w-2/5 m-r-auto -mt-10  border rounded-lg popUp opacity-100 slide-bottom">
-        <div class="flex items-center justify-between py-3 px-5  border-b">
-            <h2 class="text-2xl font-bold">${heading}</h2>
-            <i class="fa-solid fa-xmark cursor-pointer text-2xl opacity-60 hover:opacity-100 popup-close"></i>
-        </div>
-        <div class="flex items-center flex-col justify-center">
-            <p class="px-5 py-4 font-bold">${message}</p>
-        </div>
-    </div>
-</div>
-    `;
-  wrapper.style.opacity = ".8";
-  body.insertAdjacentHTML("afterbegin", popupTemp);
-
-  const popContainer = document.querySelector(".popup-container");
-  const closeBtn = document.querySelector(".popup-close");
-
-  popContainer.addEventListener("click", (e) => {
-    if (e.target.classList.contains("popup-container")) {
-      wrapper.style.opacity = "1";
-      popContainer.remove();
-    }
-  });
-  closeBtn.addEventListener("click", (e) => {
-    wrapper.style.opacity = "1";
-    popContainer.remove();
-  });
-};
-const questionare = {
+let questionare = {
   DevOps: [
     {
       stage: 1,
@@ -122,6 +76,83 @@ const questionare = {
     },
   ],
 };
+
+// valid actually used to check each second that there is no flag ?
+let valid = false;
+let shaffle = false;
+
+// screens utilties
+let screen = 1;
+
+const screenShow = (num) => {
+  screen = num;
+  modulesHandler();
+};
+const showRooms = (value) => {
+  if (value === 3) screenShow(3);
+  else if (value === 4) screenShow(4);
+  else if (value === 5) screenShow(5);
+  else if (value === 6) screenShow(6);
+};
+
+// popup message
+const messagePopup = (lost, message) => {
+  if (lost) {
+    return `
+  <div class="flex items-center flex-col justify-center">
+      <p class="px-5 py-4 font-bold">${message}</p>
+      <div class="btn-container-2" style="width: 96%; margin: 0.5rem; margin-top:0%">
+          <button onClick="goToHomePageAfterLosing(true)" class="text-2xl" style="border-radius:6px">Please restart </button>
+      </div>
+  </div>
+      `;
+  } else {
+    return `
+  <div class="flex items-center flex-col justify-center">
+      <p class="px-5 py-4 font-bold">${message}</p>
+  </div>
+      `;
+  }
+};
+const popUpOffical = (heading, message, lost, timer) => {
+  const body = document.querySelector(".body");
+  const popupTemp = `
+<div class="fixed top-0 left-0 w-full   min-h-screen z-10 flex justify-center items-center popup-container">
+    <div class="w-2/5 m-r-auto -mt-10  border rounded-lg popUp opacity-100 slide-bottom">
+        <div class="flex items-center justify-between py-3 px-5  border-b">
+            <h2 class="text-2xl font-bold">${heading}</h2>
+            <i class="fa-solid fa-xmark cursor-pointer text-2xl opacity-60 hover:opacity-100 popup-close"></i>
+        </div>
+        ${messagePopup(lost, message)}
+    </div>
+</div>
+    `;
+  wrapper.style.opacity = ".8";
+  body.insertAdjacentHTML("afterbegin", popupTemp);
+  valid = false;
+
+  const popContainer = document.querySelector(".popup-container");
+  const closeBtn = document.querySelector(".popup-close");
+
+  closeBtn.addEventListener("click", (e) => {
+    wrapper.style.opacity = "1";
+
+    if (lost) {
+      goToHomePageAfterLosing();
+    } else {
+      if (timer) {
+        const options = document.querySelectorAll(".quiz__options");
+        defaultOptions(options);
+        valid = true;
+      }
+    }
+
+    totalSeconds = 15;
+    popContainer.remove();
+  });
+};
+
+// popup Quiz question
 const showQuizQuestion = (arr) => {
   if (arr.length === 2) {
     return `
@@ -204,11 +235,11 @@ const questionPopUpTemps = (obj) => {
   // if (!obj?.image) return;
   return `
 <div class="absolute top-2 left-2 btn-container-2 w-32 z-10 ">
-
-  <button onclick="screenShow(2)" class="w-9 flex gap-2 items-center justify-center">
+  <button onclick="goToFromQuiz()" class="w-9 flex gap-2 items-center justify-center">
     <i class="fa-solid fa-chevron-left"></i> <b>Home</b>
   </button>
 </div>
+
 <div class='room-back-image'>
 <img src="./assests/images/rooms/${obj?.image}.png"/>
 </div>
@@ -221,9 +252,12 @@ const questionPopUpTemps = (obj) => {
       ? `<span class="absolute bg-green-light -top-3 -right-2 px-2 py-1 rounded-lg font-normal z-30" >Stage : <b> ${obj.stage}</b></span >`
       : ""
   }
+  <span class="absolute bg-green-light -top-3 -left-2 px-2  py-1 rounded-lg font-normal z-30" >
+  <i class="fa-solid fa-clock mr-1"></i> <b class="timer-container">15s</b>
+  </span >
     <div class="quiz">
       <div class="quiz__question">
-        <h5 class="font-heading">${obj.question}</h5>
+        <h5 class="font-heading-2">${obj.question}</h5>
         <div class="quiz__slides"></div>
         <div class="quiz__slides"></div>
         <div class="line-show"></div>
@@ -236,6 +270,8 @@ const questionPopUpTemps = (obj) => {
 </div>
     `;
 };
+
+// Progress-Bar
 const progressBar = () => {
   const percentage =
     finalResult.devopsResult.atemps.length +
@@ -245,7 +281,6 @@ const progressBar = () => {
   if (document.querySelector(".custom-progress-bar")) {
     document.querySelector(".custom-progress-bar").remove();
   }
-  console.log(percentage);
   const html = `
   <div class="w-1/2 mr-auto ml-auto mt-4 custom-progress-bar">
       <div class="w-full  rounded-full  relative py-4 bg-white">
@@ -263,12 +298,178 @@ const progressBar = () => {
   `;
 
   document
-    .querySelector(".special-section")
+    .querySelector("#main-content")
     .insertAdjacentHTML("afterbegin", html);
   document.querySelector(".progress-container").style.width = `${(
     (percentage / 6) *
     100
   ).toFixed(2)}%`;
+};
+
+// Mark Strikes and show remaing strikes
+const addingStrikes = () => {
+  if (screen == 1) return;
+  if (document.querySelector(".timerContainer"))
+    document.querySelector(".timerContainer").remove();
+
+  const html = `
+  <div class="w-full timerContainer flex  items-center justify-center">
+    <div class=" px-3 flex  items-center justify-center gap-4 text-3xl font-bold">
+        <i class="fas fa-times strike" aria-hidden="true"></i>
+        <i class="fas fa-times strike" aria-hidden="true"></i>
+        <i class="fas fa-times strike" aria-hidden="true"></i>
+    </div>
+  </div>
+  `;
+
+  header.insertAdjacentHTML("beforeend", html);
+  officalHeader.style.padding = ".3rem";
+};
+const showRemainingAttemps = () => {
+  const atempsDoc = document.querySelectorAll(".strike");
+
+  atempsDoc.forEach((el, i) => {
+    if (totalAtemps === 0) return;
+    if (i < totalAtemps) {
+      el.style.color = "#7A1123";
+    }
+  });
+};
+
+// after losing all the strikes reseting the states of varaible&structure
+const goToHomePageAfterLosing = (modal) => {
+  valid = false;
+  totalAtemps = 0;
+  const ui = document.querySelector("#main-content");
+  ui.style.filter = "blur(0px)";
+  devopsQuiz = false;
+  softEngQuiz = false;
+  financeQuiz = false;
+  shaffle = true;
+
+  devopsResult = { atemps: [], state: [] };
+  softEngResult = { atemps: [], state: [] };
+  financeResult = { atemps: [], state: [] };
+
+  finalResult = { devopsResult, softEngResult, financeResult };
+  softEngQuestionNo = 1;
+  devopsQuestionNo = 1;
+  financeQuestionNo = 1;
+
+  if (shaffle) {
+    shaffleQuizQuestions();
+  }
+
+  if (modal) {
+    document.querySelector(".popup-container").remove();
+  }
+  screenShow(1);
+};
+
+// When user in Quiz page and want to go back to screen 2
+const goToFromQuiz = () => {
+  valid = false;
+  totalSeconds = 15;
+  screenShow(2);
+};
+
+// shaffle the question after checking shaffle varaible is true
+const shaffleQuizQuestions = () => {
+  const devPrompts = questionare.DevOps.map((object, i) => {
+    return object.prompts.sort(() => Math.random() - 0.5);
+  });
+  const softPrompts = questionare.softEngineering.map((object, i) => {
+    return object.prompts.sort(() => Math.random() - 0.5);
+  });
+  questionare.DevOps.forEach((el, i) => (el.prompts = devPrompts[i]));
+  questionare.softEngineering.forEach((el, i) => (el.prompts = softPrompts[i]));
+};
+
+// authentication of quiz seconds and attemps checking on each second
+setInterval(() => {
+  authAtempsSeconds(valid);
+}, 1000);
+
+let totalSeconds = 15;
+let totalAtemps = 0;
+function authAtempsSeconds(valid) {
+  // console.log(valid);
+  if (!valid) return;
+  const timerDoc = document.querySelector(".timer-container");
+  if (!timerDoc) return;
+  if (totalSeconds <= 10) timerDoc.style.color = "#f1685e";
+  else timerDoc.style.color = "white";
+
+  if (totalSeconds == 0) {
+    totalAtemps = totalAtemps + 1;
+    totalSeconds = 15;
+    timerDoc.innerHTML = `${totalSeconds}s`;
+
+    if (totalAtemps !== 3) {
+      popUpOffical(
+        "Warning",
+        `You have ${3 - totalAtemps} ${
+          3 - totalAtemps == 1 ? "attempt" : "attempts"
+        } remaining.`,
+        false,
+        true
+      );
+    }
+  }
+
+  if (totalAtemps === 3 || totalAtemps > 3) {
+    const ui = document.querySelector("#main-content");
+    ui.style.filter = "blur(2px)";
+    valid = false;
+    popUpOffical("Game Over", `You are out of attempts.`, true, false);
+    return;
+  } else {
+    showRemainingAttemps();
+    timerDoc.innerHTML = `${totalSeconds}s`;
+    totalSeconds = totalSeconds - 1;
+
+    return;
+  }
+}
+
+// after clicking the quiz question option check it true&false
+const correctWrongChecker = (el, correct) => {
+  if (correct) {
+    el.style.background = "#a3ea2a";
+    el.children[0].style.background = "#a3ea2a";
+    el.children[1].style.background = "#a3ea2a";
+    el.children[2].style.background = "#a3ea2a";
+  } else {
+    el.style.background = "#7A1123";
+    el.children[0].style.background = "#7A1123";
+    el.children[1].style.background = "#7A1123";
+    el.children[2].style.background = "#7A1123";
+
+    totalAtemps = totalAtemps + 1;
+    showRemainingAttemps();
+    if (totalAtemps == 3) {
+      popUpOffical("Game Over", `You are out of attempts.`, true, false);
+      return;
+    }
+    popUpOffical(
+      "Warning",
+      `You have ${3 - totalAtemps} ${
+        3 - totalAtemps == 1 ? "attempt" : "attempts"
+      } remaining.`,
+      false,
+      true
+    );
+  }
+};
+
+// setting the default color to question option
+const defaultOptions = (options) => {
+  options.forEach((el) => {
+    el.style.background = "#525a6a";
+    el.children[0].style.background = "#525a6a";
+    el.children[1].style.background = "#525a6a";
+    el.children[2].style.background = "#525a6a";
+  });
 };
 
 // first screen templates and handler
@@ -283,35 +484,39 @@ const firstScreenTemp = () => {
             and present it to the CEO. You will visit each department and will be asking certain
             questions.
         </li>
-        <li>
-            We can show the questions as popups to the user and the user will select one of the correct
-            answers
-        </li>
+        
 
     </ul>
     <div class="btn-container mt-8">
-        <button>Start</button>
+        <button class="start-btn">Start</button>
     </div>
 </div>
     `;
 };
-
 const firstScreenHandler = () => {
   // generating templates
   const temp = firstScreenTemp();
-  allCasesFn(0);
 
   // adding templates to container
   const container = document.querySelector("#main-content");
+  container.innerHTML = "";
   container.insertAdjacentHTML("afterbegin", temp);
+  if (document.querySelector(".timerContainer")) {
+    document.querySelector(".timerContainer").remove();
+    officalHeader.style.padding = "1.2rem 0";
+  }
+
+  mainHeading.innerHTML = "AWS Cloud 101";
 
   // adding listener to Start button
-  const btn = document.querySelector(".btn-container");
+  const btn = document.querySelector(".start-btn");
   btn.addEventListener("click", (e) => {
     screenShow(2);
     popUpOffical(
       "Introduction",
-      "In this level, Solved all the questions, to open CEO Office."
+      "Click on the Department to visit it.",
+      false,
+      false
     );
   });
 };
@@ -355,7 +560,6 @@ const secondScreenTemp = () => {
   </div>
     `;
 };
-
 const secondScreenHandler = () => {
   // generating templates
   const temp = secondScreenTemp();
@@ -366,7 +570,10 @@ const secondScreenHandler = () => {
   mainHeading.innerHTML = "AWS Cloud 101";
   container.insertAdjacentHTML("afterbegin", temp);
   progressBar();
-
+  if (document.querySelector(".timerContainer")) {
+    document.querySelector(".timerContainer").remove();
+    officalHeader.style.padding = "1.2rem 0";
+  }
   const rooms = document.querySelectorAll(".overlay-image");
   rooms.forEach((element, i) =>
     element.addEventListener("click", () => showRooms(i + 3))
@@ -380,144 +587,7 @@ const secondScreenHandler = () => {
           />
   `;
 };
-
-// devops screen templates and handler
-let devopsQuestionNo = 1;
-const devOpsScreenHandler = () => {
-  if (devopsQuiz) return;
-  let question = questionare.DevOps[devopsQuestionNo - 1];
-  const temp = questionPopUpTemps(question);
-
-  const container = document.querySelector("#main-content");
-
-  container.innerHTML = "";
-  mainHeading.innerHTML = "Dev Ops";
-  container.insertAdjacentHTML("afterbegin", temp);
-  progressBar();
-
-  const quizShow = document.querySelector(".quiz__container");
-  setTimeout(() => {
-    quizShow.style.opacity = "1";
-    quizShow.style.zIndex = "1";
-  }, 500);
-  const options = document.querySelectorAll(".quiz__options");
-  options.forEach((el) => {
-    el.addEventListener("click", () => {
-      if (question.answer === el.dataset.id) {
-        devopsResult.atemps.push(question);
-        devopsResult.state.push("correct");
-        devopsQuestionNo = devopsQuestionNo + 1;
-
-        if (devopsQuestionNo > questionare.DevOps.length) {
-          devopsQuiz = true;
-          screenShow(2);
-          return;
-        }
-        devOpsScreenHandler();
-      } else {
-        devopsResult.atemps.push(question);
-        devopsResult.state.push("wrong");
-        devopsQuestionNo = devopsQuestionNo + 1;
-
-        if (devopsQuestionNo > questionare.DevOps.length) {
-          devopsQuiz = true;
-          screenShow(2);
-          return;
-        }
-        devOpsScreenHandler();
-      }
-    });
-  });
-};
-
-// software Engineer screen templates and handler
-let softEngQuestionNo = 1;
-const softEngScreenHandler = () => {
-  if (softEngQuiz) return;
-  let question = questionare.softEngineering[softEngQuestionNo - 1];
-  const temp = questionPopUpTemps(question);
-
-  const container = document.querySelector("#main-content");
-  container.innerHTML = "";
-  mainHeading.innerHTML = "Software Engineering";
-  container.insertAdjacentHTML("afterbegin", temp);
-  progressBar();
-
-  const quizShow = document.querySelector(".quiz__container");
-  setTimeout(() => {
-    quizShow.style.opacity = "1";
-    quizShow.style.zIndex = "1";
-  }, 500);
-
-  const options = document.querySelectorAll(".quiz__options");
-
-  options.forEach((el) => {
-    el.addEventListener("click", () => {
-      if (question.answer === el.dataset.id) {
-        softEngResult.atemps.push(question);
-        softEngResult.state.push("correct");
-        softEngQuestionNo = softEngQuestionNo + 1;
-
-        if (softEngQuestionNo > questionare.softEngineering.length) {
-          softEngQuiz = true;
-          screenShow(2);
-          return;
-        }
-        softEngScreenHandler();
-      } else {
-        softEngResult.atemps.push(question);
-        softEngResult.state.push("wrong");
-        softEngQuestionNo = softEngQuestionNo + 1;
-
-        if (softEngQuestionNo > questionare.softEngineering.length) {
-          softEngQuiz = true;
-          screenShow(2);
-          return;
-        }
-        softEngScreenHandler();
-      }
-    });
-  });
-};
-
-// finance screen templates and handler
-let financeQuestionNo = 1;
-const financeScreenHandler = () => {
-  // generating templates
-  if (financeQuiz) return;
-  let question = questionare.finance[financeQuestionNo - 1];
-  const temp = questionPopUpTemps(question, "Finance");
-  // adding templates to container
-  const container = document.querySelector("#main-content");
-  container.innerHTML = "";
-  mainHeading.innerHTML = "Finance Team";
-  container.insertAdjacentHTML("afterbegin", temp);
-  progressBar();
-
-  const quizShow = document.querySelector(".quiz__container");
-  setTimeout(() => {
-    quizShow.style.opacity = "1";
-    quizShow.style.zIndex = "1";
-  }, 500);
-
-  const options = document.querySelectorAll(".quiz__options");
-  options.forEach((el) => {
-    el.addEventListener("click", () => {
-      if (question.answer === el.dataset.id) {
-        financeResult.atemps.push(question);
-        financeResult.state.push("correct");
-        financeQuiz = true;
-        screenShow(2);
-      } else {
-        financeResult.atemps.push(question);
-        financeResult.state.push("wrong");
-        financeQuestionNo = financeQuestionNo + 1;
-        financeQuiz = true;
-        screenShow(2);
-      }
-    });
-  });
-};
+// Temporary Coordinates for maping area of image
 const ceoCoords = [{ x: [76, 250], y: [168, 239] }];
 const seCoords = [{ x: [212, 470], y: [106, 148] }];
 const financeCoords = [{ x: [182, 450], y: [288, 340] }];
@@ -571,31 +641,6 @@ const perimeterMouseover = (event) => {
   }
 
   return;
-
-  /* if (isWithin(base, coordinates.ceo)) {
-    console.log("Area visbale position Ceo");
-    showImage(0);
-    // popUpOffical(
-    //   "Warning",
-    //   "The CEO room is closed. First complete the questionare."
-    // );
-  }
-
-  if (isWithin(base, coordinates.softEng)) {
-    // screenShow(4);
-    showImage(3);
-    console.log("Area visbale position SoftEng");
-  }
-  if (isWithin(base, coordinates.finance)) {
-    // screenShow(5);
-    showImage(2);
-    console.log("Area visbale position finance");
-  }
-  if (isWithin(base, coordinates.dev)) {
-    // screenShow(3);
-    showImage(1);
-    console.log("Area visbale position dev");
-  } */
 };
 
 const isWithin = (event, coords) => {
@@ -628,11 +673,180 @@ const isWithin = (event, coords) => {
   return within;
 };
 
-// ceo screen handler and templates
+// devops screen templates and handler
+let devopsQuestionNo = 1;
+const devOpsScreenHandler = () => {
+  if (devopsQuiz) return;
+  valid = true;
 
+  let question = questionare.DevOps[devopsQuestionNo - 1];
+  // if (!question) location.reload();
+
+  const temp = questionPopUpTemps(question);
+
+  const container = document.querySelector("#main-content");
+
+  container.innerHTML = "";
+  mainHeading.innerHTML = "Dev Ops";
+  container.insertAdjacentHTML("afterbegin", temp);
+  addingStrikes();
+  progressBar();
+  showRemainingAttemps();
+  const quizShow = document.querySelector(".quiz__container");
+  setTimeout(() => {
+    quizShow.style.opacity = ".9";
+    quizShow.style.zIndex = "1";
+  }, 500);
+  const options = document.querySelectorAll(".quiz__options");
+
+  options.forEach((el) => {
+    el.addEventListener("click", () => {
+      defaultOptions(options);
+
+      if (question.answer === el.dataset.id) {
+        correctWrongChecker(el, true);
+        devopsResult.atemps.push(question);
+        devopsResult.state.push("correct");
+        devopsQuestionNo = devopsQuestionNo + 1;
+        totalSeconds = 15;
+
+        if (devopsQuestionNo > questionare.DevOps.length) {
+          devopsQuiz = true;
+          setTimeout(() => {
+            screenShow(2);
+          }, 500);
+          return;
+        }
+        setTimeout(() => {
+          devOpsScreenHandler();
+        }, 500);
+      } else {
+        correctWrongChecker(el, false);
+
+        if (devopsQuestionNo > questionare.DevOps.length) {
+          devopsQuiz = true;
+          setTimeout(() => {
+            screenShow(2);
+          }, 500);
+          return;
+        }
+      }
+    });
+  });
+};
+
+// software Engineer screen templates and handler
+let softEngQuestionNo = 1;
+const softEngScreenHandler = () => {
+  if (softEngQuiz) return;
+  valid = true;
+  let question = questionare.softEngineering[softEngQuestionNo - 1];
+  // if (!question) location.reload();
+
+  const temp = questionPopUpTemps(question);
+
+  const container = document.querySelector("#main-content");
+  container.innerHTML = "";
+  mainHeading.innerHTML = "Software Engineering";
+  container.insertAdjacentHTML("afterbegin", temp);
+  addingStrikes();
+  progressBar();
+  showRemainingAttemps();
+  const quizShow = document.querySelector(".quiz__container");
+  setTimeout(() => {
+    quizShow.style.opacity = ".9";
+    quizShow.style.zIndex = "1";
+  }, 500);
+
+  const options = document.querySelectorAll(".quiz__options");
+
+  options.forEach((el) => {
+    el.addEventListener("click", () => {
+      defaultOptions(options);
+
+      if (question.answer === el.dataset.id) {
+        correctWrongChecker(el, true);
+        softEngResult.atemps.push(question);
+        softEngResult.state.push("correct");
+        softEngQuestionNo = softEngQuestionNo + 1;
+        totalSeconds = 15;
+
+        if (softEngQuestionNo > questionare.softEngineering.length) {
+          softEngQuiz = true;
+          setTimeout(() => {
+            screenShow(2);
+          }, 500);
+          return;
+        }
+        setTimeout(() => {
+          softEngScreenHandler();
+        }, 500);
+      } else {
+        correctWrongChecker(el, false);
+
+        if (softEngQuestionNo > questionare.softEngineering.length) {
+          softEngQuiz = true;
+          setTimeout(() => {
+            screenShow(2);
+          }, 500);
+          return;
+        }
+        return;
+      }
+    });
+  });
+};
+
+// finance screen templates and handler
+let financeQuestionNo = 1;
+const financeScreenHandler = () => {
+  // generating templates
+  if (financeQuiz) return;
+  valid = true;
+  let question = questionare.finance[financeQuestionNo - 1];
+  const temp = questionPopUpTemps(question, "Finance");
+  // adding templates to container
+  const container = document.querySelector("#main-content");
+  container.innerHTML = "";
+  mainHeading.innerHTML = "Finance Team";
+  container.insertAdjacentHTML("afterbegin", temp);
+  addingStrikes();
+  progressBar();
+  showRemainingAttemps();
+  const quizShow = document.querySelector(".quiz__container");
+  setTimeout(() => {
+    quizShow.style.opacity = ".9";
+    quizShow.style.zIndex = "1";
+  }, 500);
+
+  const options = document.querySelectorAll(".quiz__options");
+  options.forEach((el) => {
+    el.addEventListener("click", () => {
+      if (question.answer === el.dataset.id) {
+        financeResult.atemps.push(question);
+        financeResult.state.push("correct");
+        financeQuiz = true;
+        totalSeconds = 15;
+        defaultOptions(options);
+        correctWrongChecker(el, true);
+        setTimeout(() => {
+          screenShow(2);
+        }, 500);
+      } else {
+        correctWrongChecker(el, false);
+      }
+    });
+  });
+};
+
+// ceo screen handler and templates
 const ceoScreenTemp = () => {
   console.log(finalResult);
-  return "<h1>ceo room opend<h1/>";
+  return `
+<div class="ceo-container w-full flex items-center justify-center flex-1">
+    <img src="./assests/images/rooms/ceo.png" alt="ceo-room-image" class="mt-8"/>
+</div>
+  `;
 };
 const ceoScreenHandler = () => {
   // generating templates
@@ -644,10 +858,11 @@ const ceoScreenHandler = () => {
   } else {
     popUpOffical(
       "Warning",
-      "The CEO room is closed. First complete the questionare."
+      "The CEO room is closed. First complete the questionnaire."
     );
   }
 };
+
 // main handler for all modules
 function modulesHandler() {
   if (screen === 1) firstScreenHandler();
@@ -660,38 +875,3 @@ function modulesHandler() {
 }
 
 modulesHandler();
-
-// mockup for second screen
-// const secondScreenTemp = () => {
-//   return `
-//   <div class="absolute top-2/4 left-2/4 -translate-x-1/2 -translate-y-1/2 w-full" >
-//     <div class="w-1/2 grid grid-cols-2 m-auto bg-red-500">
-
-//       <div  class="w-full flex items-center flex-col justify-center relative">
-//         <img id="room-ceo" class="rooms bg-green-500" src="./assests/aws-imgs/use/ceo-2.jpeg" />
-//       </div>
-
-//       <div  class="w-full flex flex-col items-center justify-center relative">
-//         <img class="rooms" id="room-softengineer" src="./assests/aws-imgs/use/softEng.jpeg" />
-//       </div>
-
-//       <div  class="w-full flex flex-col items-center justify-center relative">
-//         <img class="rooms" id="room-finance" src="./assests/aws-imgs/use/finance.jpeg" />
-//       </div>
-
-//       <div  class="w-full flex items-center justify-center flex-col relative">
-//         <img class="rooms" id="room-devops" src="./assests/aws-imgs/use/dev.jpeg" />
-//       </div>
-
-//     </div>
-
-//     <div class="w-1/2 mr-auto ml-auto mt-4">
-//       <div class="w-full bg-gray-200 rounded-full dark:bg-gray-700">
-//         <div class="text-xs font-medium progress-container text-center p-0.5 leading-none rounded-full" style="width: 45%">
-//           45%
-//         </div>
-//       </div>
-//     </div>
-// </div>
-//   `;
-// };
