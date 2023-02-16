@@ -14,12 +14,10 @@ $color-red-light: #eb0037;
 
 body {
   background-color: $color-main;
-  min-height: 100vh;
+  // min-height: 100vh;
   color: #ececec;
   font-family: "Source Sans Pro", "Ubuntu", sans-serif !important;
 }
-
-@import "./modules/header";
 
 // wraper layout
 .wrapper {
@@ -33,6 +31,19 @@ body {
   background-color: $color-secondary;
   border-bottom: 0.1px solid #ececec7a;
   padding: 1rem 0;
+}
+#tooltip {
+  display: none;
+  position: absolute;
+  background-color: black;
+  padding: 2px;
+  border: 1px solid #ddd;
+  color: white;
+  left: 53%;
+  word-spacing: 4px;
+  min-width: 200px;
+  padding: 0.5rem 0;
+  text-align: center;
 }
 
 // ultilities
@@ -129,11 +140,6 @@ body {
   }
 }
 
-// .timerContainer {
-//   background-color: $color-btn;
-//   font-weight: 400;
-//   font-size: 1.2rem;
-// }
 .slide-bottom {
   -webkit-animation: slide-bottom 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
   animation: slide-bottom 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
@@ -151,7 +157,6 @@ body {
 }
 
 .quiz__container {
-  width: 90%;
   background-color: $color-secondary;
   position: relative !important;
   border: 3px solid $color-btn;
@@ -169,15 +174,15 @@ body {
     width: 80%;
     margin: auto;
     min-height: 110px;
-    background-color: $color-btn;
+    background-color: #212c42;
+
     position: relative;
     z-index: 10;
     margin-bottom: 3rem;
     h5 {
-      z-index: 100 !important;
+      z-index: 10000 !important;
       padding: 0rem 0;
-      // line-height: 2rem;
-      background-color: $color-btn;
+      background-color: #212c42;
       width: 90%;
       margin: auto;
     }
@@ -185,7 +190,8 @@ body {
 
   &__slides {
     position: absolute;
-    background-color: $color-btn;
+    background-color: #212c42;
+    z-index: 100;
     width: 80px;
     height: 50%;
     height: 100%;
@@ -275,12 +281,12 @@ body {
 .line-no-3 {
   z-index: -2;
   border-left: 3px solid $color-btn;
-  left: -22%;
-  width: 150%;
+  left: -24%;
+  width: 190%;
   border-right: none;
 }
 .line-no-2 {
-  width: 121.5%;
+  width: 124%;
   border-right: 3px solid $color-btn;
 }
 .special-line-no-3 {
@@ -295,9 +301,6 @@ body {
   grid-template-columns: 1fr;
   width: 50%;
   margin-top: 1rem;
-}
-.special-section {
-  min-height: 95vh;
 }
 
 .quiz__options:hover {
@@ -320,13 +323,15 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 70%;
+  width: 620px;
   height: 95vh;
   margin: auto;
+  flex: 1;
   img {
-    width: 100%;
-    height: 70%;
+    // width: 100%;
     object-fit: cover;
+    margin-top: -2rem;
+    border-radius: 8px;
   }
 }
 
@@ -344,14 +349,10 @@ $typing-duration: 4s;
 }
 
 .#{$slider-name} {
-  // text-align: center;
-  // white-space: nowrap;
   position: relative;
 }
 
 .#{$slider-name} h4 {
-  // position: relative;
-  // display: inline;
   animation: slide $typing-duration;
 }
 
@@ -361,53 +362,32 @@ $typing-duration: 4s;
   top: 0;
   right: 0;
   bottom: 0;
-  // width: 50%;
   background-color: $color-secondary;
-  // background-color: red;
-
-  // animation: typing $typing-duration 1, cursor $typing-duration 1;
   animation: typing $typing-duration, cursor $typing-duration;
 }
 
-@media screen and (max-width: 1750px) {
-  .line-no-1,
-  .line-no-3 {
-    left: -21.5%;
+.room-image {
+  animation: zoom-out-animation 0.8s ease-out;
+  transform-origin: center center;
+}
+@keyframes zoom-out-animation {
+  0% {
+    transform: scale(1.2);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
   }
 }
-@media screen and (max-width: 1450px) {
-  .line-no-1,
-  .line-no-3 {
-    left: -22%;
-  }
-  .line-no-2 {
-    width: 121.7%;
-  }
-}
-@media screen and (max-width: 1380px) {
-  .line-no-2 {
-    width: 122%;
-  }
-}
+
 @media screen and (max-width: 1200px) {
   .offical-header {
     padding: 1.2rem 0;
   }
-  .line-no-2 {
-    width: 122.4%;
-  }
-  .line-no-1,
-  .line-no-3 {
-    left: -22.5%;
-  }
 }
 @media screen and (max-width: 1050px) {
-  .quiz {
-    padding: 3rem 0rem;
-  }
-  .quiz__container {
-    width: 98%;
-  }
   .quiz__question,
   .quiz__options-container {
     width: 90%;
@@ -430,6 +410,9 @@ $typing-duration: 4s;
   }
 }
 @media screen and (max-width: 750px) {
+  .room-image-responsive {
+    height: auto !important;
+  }
   body {
     padding: 0% !important;
   }

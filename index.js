@@ -25,6 +25,7 @@ let questionare = {
       prompts: ["On-Premises", "Cloud"],
       answer: "Cloud",
       image: "dev",
+      height: "auto",
     },
     {
       stage: 2,
@@ -38,6 +39,7 @@ let questionare = {
       answer:
         "Lesser latency rate for website users and easy scalability as the userbase grows.",
       image: "dev",
+      height: "75%",
     },
   ],
   softEngineering: [
@@ -48,6 +50,7 @@ let questionare = {
       prompts: ["af", "eu", "us"],
       answer: "us",
       image: "softEng",
+      height: "75%",
     },
     {
       stage: false,
@@ -56,6 +59,7 @@ let questionare = {
       prompts: ["EC2", "Route 53", "RDS"],
       answer: "Route 53",
       image: "softEng",
+      height: "75%",
     },
     {
       stage: false,
@@ -64,6 +68,7 @@ let questionare = {
       prompts: ["USB", "API", "Email"],
       answer: "API",
       image: "softEng",
+      height: "75%",
     },
   ],
   finance: [
@@ -74,6 +79,7 @@ let questionare = {
       prompts: ["Operational", "Optional"],
       answer: "Optional",
       image: "finance",
+      height: "auto",
     },
   ],
 };
@@ -121,8 +127,8 @@ const popUpOffical = (heading, message, lost, timer) => {
   }
   const body = document.querySelector(".body");
   const popupTemp = `
-<div class="fixed top-0 left-0 w-full   min-h-screen z-10 flex justify-center items-center popup-container">
-    <div class="w-full md:w-2/5 m-r-auto -mt-10  border rounded-lg popUp opacity-100 slide-bottom">
+<div class="fixed top-0 left-0  w-full  min-h-screen z-10 flex justify-center items-center popup-container">
+    <div class="w-[580px]  md:w-2/5 m-r-auto -mt-10  border rounded-lg popUp opacity-100 slide-bottom">
         <div class="flex items-center justify-between py-3 px-5  border-b">
             <h2 class="text-2xl font-bold">${heading}</h2>
             <i class="fa-solid fa-xmark cursor-pointer text-2xl opacity-60 hover:opacity-100 popup-close"></i>
@@ -143,6 +149,7 @@ const popUpOffical = (heading, message, lost, timer) => {
 
     if (lost) {
       goToHomePageAfterLosing();
+      wrapper.style.opacity = "1";
     } else {
       if (timer) {
         const options = document.querySelectorAll(".quiz__options");
@@ -151,12 +158,39 @@ const popUpOffical = (heading, message, lost, timer) => {
       }
     }
 
-    totalSeconds = 15;
+    totalSeconds = 30;
     popContainer.remove();
 
     if (currPopupMsg === 4 || currPopupMsg > 3) {
       location.reload();
     }
+  });
+};
+const popUpOfficalIntroduction = (message) => {
+  if (document.querySelector(".popup-container")) {
+    document.querySelector(".popup-container").remove();
+  }
+  const body = document.querySelector(".body");
+  const popupTemp = `
+<div class="fixed top-0 left-0  w-full  min-h-screen z-10 flex justify-center items-center popup-container">
+    <div class="w-[500px] md:w-[600px] m-r-auto mt-[-14rem]  md:mt-[-22rem] border rounded-lg popUp opacity-100 slide-bottom">
+        <div class="flex items-center justify-between py-3 px-5">
+            <p class="px-5 py-4 font-bold flex-1 text-center">${message}</p>
+            <i class="fa-solid fa-xmark cursor-pointer text-2xl opacity-60 hover:opacity-100 popup-close"></i>
+            </div>
+
+    </div>
+</div>
+    `;
+  wrapper.style.opacity = ".8";
+  body.insertAdjacentHTML("afterbegin", popupTemp);
+
+  const popContainer = document.querySelector(".popup-container");
+  const closeBtn = document.querySelector(".popup-close");
+
+  closeBtn.addEventListener("click", (e) => {
+    wrapper.style.opacity = "1";
+    popContainer.remove();
   });
 };
 
@@ -239,23 +273,25 @@ const showQuizQuestion = (arr) => {
   `;
   }
 };
-const questionPopUpTemps = (obj) => {
-  // if (!obj?.image) return;
+const questionPopUpTemps = (obj, option) => {
   return `
-
 <div class='room-back-image'>
-<img src="./assests/images/rooms/${obj?.image}.png"/>
+<img   class="w-[620px] ${
+    option === 1 ? "room-image" : ""
+  } room-image-responsive" style="height:${
+    obj.height
+  }" src="./assests/images/rooms/${obj?.image}.png"/>
 </div>
 
 <div class="flex-1 absolute top-0 left-0 w-full h-full flex items-center justify-center mt-2">
 
-  <div class="m-auto rounded-lg slide-bottom quiz__container opacity-0 -z-10">
+  <div class="m-auto w-[620px]  rounded-lg slide-bottom quiz__container opacity-0 -z-10">
   ${
     obj?.stage
-      ? `<span class="absolute bg-green-light -top-3 -right-2 px-2 py-1 rounded-lg font-normal z-30" >Stage : <b> ${obj.stage}</b></span >`
+      ? `<span class="absolute bg-green-light text-black -top-3 right-0 md:-right-2 px-2 py-1 rounded-lg font-normal z-30" ><b> Stage :  ${obj.stage}</b></span >`
       : ""
   }
-  <span class="absolute bg-green-light -top-3 -left-2 px-2  py-1 rounded-lg font-normal z-30" >
+  <span class="absolute bg-green-light text-black -top-3 left-0 md:-left-2 px-2  py-1 rounded-lg font-normal z-30" >
   <i class="fa-solid fa-clock mr-1"></i> <b class="timer-container">15s</b>
   </span >
     <div class="quiz">
@@ -311,26 +347,40 @@ const progressBar = () => {
 
 // Mark Strikes and show remaing strikes
 const addingStrikes = () => {
-  if (screen == 1) return;
   if (document.querySelector(".timerContainer"))
     document.querySelector(".timerContainer").remove();
 
   const html = `
-  <div class="w-full timerContainer flex  items-center justify-center">
-    <div class=" px-3 flex  items-center justify-center gap-4 text-3xl font-bold">
+  <div class="w-full timerContainer flex  items-center justify-center relative">
+    <div class="strikeRemaining px-3 flex  items-center justify-center gap-4 text-3xl font-bold">
         <i class="fas fa-times strike" aria-hidden="true"></i>
         <i class="fas fa-times strike" aria-hidden="true"></i>
         <i class="fas fa-times strike" aria-hidden="true"></i>
     </div>
+    <div id="tooltip">Remaining  Attempts  (3/3)</div>
   </div>
   `;
 
-  header.insertAdjacentHTML("beforeend", html);
+  const doc = document.querySelector(".header-content");
+  doc.insertAdjacentHTML("afterend", html);
   officalHeader.style.padding = ".3rem";
+
+  const strikeRemaining = document.querySelector(".strikeRemaining");
+  const tooltip = document.querySelector("#tooltip");
+
+  strikeRemaining.addEventListener("mouseenter", function () {
+    tooltip.style.display = "block";
+  });
+
+  strikeRemaining.addEventListener("mouseleave", function () {
+    tooltip.style.display = "none";
+  });
 };
 const showRemainingAttemps = () => {
   const atempsDoc = document.querySelectorAll(".strike");
 
+  const tooltip = document.querySelector("#tooltip");
+  tooltip.innerHTML = `Remaining Attempts (${3 - totalAtemps}/3)`;
   atempsDoc.forEach((el, i) => {
     if (totalAtemps === 0) return;
     if (i < totalAtemps) {
@@ -344,6 +394,7 @@ const goToHomePageAfterLosing = (modal) => {
   valid = false;
   totalAtemps = 0;
   const ui = document.querySelector("#main-content");
+  wrapper.style.opacity = "1";
   ui.style.filter = "blur(0px)";
   devopsQuiz = false;
   softEngQuiz = false;
@@ -372,7 +423,7 @@ const goToHomePageAfterLosing = (modal) => {
 // When user in Quiz page and want to go back to screen 2
 const goToFromQuiz = () => {
   valid = false;
-  totalSeconds = 15;
+  totalSeconds = 30;
   screenShow(2);
 };
 
@@ -393,7 +444,7 @@ setInterval(() => {
   authAtempsSeconds(valid);
 }, 1000);
 
-let totalSeconds = 15;
+let totalSeconds = 30;
 let totalAtemps = 0;
 function authAtempsSeconds(valid) {
   // console.log(valid);
@@ -401,11 +452,11 @@ function authAtempsSeconds(valid) {
   const timerDoc = document.querySelector(".timer-container");
   if (!timerDoc) return;
   if (totalSeconds <= 10) timerDoc.style.color = "#f1685e";
-  else timerDoc.style.color = "white";
+  else timerDoc.style.color = "black";
 
   if (totalSeconds == 0) {
     totalAtemps = totalAtemps + 1;
-    totalSeconds = 15;
+    totalSeconds = 30;
     timerDoc.innerHTML = `${totalSeconds}s`;
 
     if (totalAtemps !== 3) {
@@ -483,12 +534,12 @@ const firstScreenTemp = () => {
     <ul class="mt-4 px-8 list-disc">
         <li class="mb-3 leading-6">You have been tasked to develop a social media interaction website
             where users can communicate with each other (More or fewer features of Twitter and
-            Facebook. You are tasked to get input from all the teams, prepare a feasibility report,
-            and present it to the CEO. 
+            Facebook). You are tasked to get input from all the teams, prepare a feasibility report,
+            and present it to the CEO.
         </li>
         <li class="mb-3 leading-6">You will visit each department and will be asking certain questions.
         </li>
-        <li class="mb-3 leading-6">You will only be given 15 seconds to answer each question.
+        <li class="mb-3 leading-6">You will only be given 30 seconds to answer each question.
         </li>
         <li class="mb-3 leading-6">In case of running out of time, you get a penalty. Your game will be over after three penalties.
         </li>
@@ -507,19 +558,18 @@ const firstScreenHandler = () => {
   const container = document.querySelector("#main-content");
   container.innerHTML = "";
   container.insertAdjacentHTML("afterbegin", temp);
+  // addingStrikes();
+  mainHeading.innerHTML = "AWS Cloud 101";
   if (document.querySelector(".timerContainer")) {
     document.querySelector(".timerContainer").remove();
-    officalHeader.style.padding = "1.2rem 0";
+    header.style.padding = "1rem 0";
   }
-
-  mainHeading.innerHTML = "AWS Cloud 101";
 
   // adding listener to Start button
   const btn = document.querySelector(".start-btn");
   btn.addEventListener("click", (e) => {
     screenShow(2);
-    popUpOffical(
-      "Introduction",
+    popUpOfficalIntroduction(
       "Click on the Department to visit it.",
       false,
       false
@@ -530,7 +580,7 @@ const firstScreenHandler = () => {
 // Second screen templates and handler
 const secondScreenTemp = () => {
   return `
-<div class="absolute top-2/4 left-2/4 -translate-x-1/2 -translate-y-1/2 w-full overflow-auto">
+<div class="w-full overflow-auto">
     <div class="main-image-container" 
       onmousemove="perimeterMouseover(event)">
       <img
@@ -575,11 +625,11 @@ const secondScreenHandler = () => {
   container.innerHTML = "";
   mainHeading.innerHTML = "AWS Cloud 101";
   container.insertAdjacentHTML("afterbegin", temp);
+  addingStrikes();
   progressBar();
-  if (document.querySelector(".timerContainer")) {
-    document.querySelector(".timerContainer").remove();
-    officalHeader.style.padding = "1.2rem 0";
-  }
+  showRemainingAttemps();
+  header.style.padding = "0rem 0";
+
   const rooms = document.querySelectorAll(".overlay-image");
   rooms.forEach((element, i) =>
     element.addEventListener("click", () => showRooms(i + 3))
@@ -688,7 +738,7 @@ const devOpsScreenHandler = () => {
   let question = questionare.DevOps[devopsQuestionNo - 1];
   // if (!question) location.reload();
 
-  const temp = questionPopUpTemps(question);
+  const temp = questionPopUpTemps(question, devopsQuestionNo);
 
   const container = document.querySelector("#main-content");
 
@@ -714,7 +764,7 @@ const devOpsScreenHandler = () => {
         devopsResult.atemps.push(question);
         devopsResult.state.push("correct");
         devopsQuestionNo = devopsQuestionNo + 1;
-        totalSeconds = 15;
+        totalSeconds = 30;
 
         if (devopsQuestionNo > questionare.DevOps.length) {
           devopsQuiz = true;
@@ -747,9 +797,7 @@ const softEngScreenHandler = () => {
   if (softEngQuiz) return;
   valid = true;
   let question = questionare.softEngineering[softEngQuestionNo - 1];
-  // if (!question) location.reload();
-
-  const temp = questionPopUpTemps(question);
+  const temp = questionPopUpTemps(question, softEngQuestionNo);
 
   const container = document.querySelector("#main-content");
   container.innerHTML = "";
@@ -775,7 +823,7 @@ const softEngScreenHandler = () => {
         softEngResult.atemps.push(question);
         softEngResult.state.push("correct");
         softEngQuestionNo = softEngQuestionNo + 1;
-        totalSeconds = 15;
+        totalSeconds = 30;
 
         if (softEngQuestionNo > questionare.softEngineering.length) {
           softEngQuiz = true;
@@ -810,7 +858,7 @@ const financeScreenHandler = () => {
   if (financeQuiz) return;
   valid = true;
   let question = questionare.finance[financeQuestionNo - 1];
-  const temp = questionPopUpTemps(question, "Finance");
+  const temp = questionPopUpTemps(question, financeQuestionNo);
   // adding templates to container
   const container = document.querySelector("#main-content");
   container.innerHTML = "";
@@ -832,7 +880,7 @@ const financeScreenHandler = () => {
         financeResult.atemps.push(question);
         financeResult.state.push("correct");
         financeQuiz = true;
-        totalSeconds = 15;
+        totalSeconds = 30;
         defaultOptions(options);
         correctWrongChecker(el, true);
         setTimeout(() => {
@@ -864,10 +912,12 @@ const questionAnswerReport = (questions) => {
   });
 };
 
-const ceoScreenTemp = (data, heading) => {
+const ceoScreenTemp = (data, heading, option) => {
   return `
 <div class="ceo-container w-full flex items-center justify-center flex-1" >
-  <img src="./assests/images/rooms/ceo.png" alt="ceo-room-image" class="mt-8"/>
+  <img src="./assests/images/rooms/ceo.png" alt="ceo-room-image" class="mt-8 ${
+    option === 1 ? "room-image" : ""
+  }"/>
 </div>
 
 <div class="absolute top-2/4 -translate-y-2/4	 -translate-x-2/4		left-2/4	 w-full  flex justify-center items-center popup-container ceoroom-popup-container opacity-90">
@@ -904,7 +954,7 @@ const ceoScreenHandler = () => {
   // generating templates
   if (devopsQuiz && softEngQuiz && financeQuiz) {
     if (currPopupMsg === 1) {
-      const temp = ceoScreenTemp(questionare.DevOps, "DevOps");
+      const temp = ceoScreenTemp(questionare.DevOps, "DevOps", 1);
       const container = document.querySelector("#main-content");
       container.innerHTML = "";
       container.insertAdjacentHTML("afterbegin", temp);
@@ -939,7 +989,7 @@ const ceoScreenHandler = () => {
       const container = document.querySelector("#main-content");
       container.innerHTML = "";
       container.insertAdjacentHTML("afterbegin", html);
-      popUpOffical("Flag", "thm");
+      popUpOffical("Flag", "THM{AWS_CLOUD__00100}");
       return;
     }
   } else {
