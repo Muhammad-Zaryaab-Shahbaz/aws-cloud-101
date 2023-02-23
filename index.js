@@ -585,7 +585,7 @@ const secondScreenTemp = () => {
     <div class="main-image-container" 
       onmousemove="perimeterMouseover(event)">
       <div class="sides side-ceo">
-            <b>Ceo Room</b>
+            <b>CEO Room</b>
       </div>
       <div class="sides side-softeng">
          <b>Software Engineering room</b>
