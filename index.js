@@ -580,9 +580,32 @@ const firstScreenHandler = () => {
 // Second screen templates and handler
 const secondScreenTemp = () => {
   return `
-<div class="w-full overflow-auto">
+<div class="w-full overflow-auto relative">
+   
     <div class="main-image-container" 
       onmousemove="perimeterMouseover(event)">
+      <div class="sides side-ceo">
+            <b>Ceo Room</b>
+      </div>
+      <div class="sides side-softeng">
+         <b>Software Engineering room</b>
+      </div>
+      <div class="sides side-finance">
+         <b>Finance room</b>
+      </div>
+      <div class="sides side-devops">
+         <b>DevOps room</b>
+      </div>
+      <div class="confirm-completion confirm-completion-devops">
+         <i class="fa-solid fa-circle-check"></i>
+      </div>
+
+      <div class="confirm-completion confirm-completion-softeng">
+        <i class="fa-solid fa-circle-check"></i>
+      </div>
+      <div class="confirm-completion confirm-completion-finance">
+        <i class="fa-solid fa-circle-check"></i>
+      </div>
       <img
         src="./assests/images/full_office.png"
         class="main-image-container__bg"
@@ -628,12 +651,13 @@ const secondScreenHandler = () => {
   addingStrikes();
   progressBar();
   showRemainingAttemps();
+  showTickToCompletedRoomQuiz();
   header.style.padding = "0rem 0";
 
   const rooms = document.querySelectorAll(".overlay-image");
-  rooms.forEach((element, i) =>
-    element.addEventListener("click", () => showRooms(i + 3))
-  );
+  rooms.forEach((element, i) => {
+    element.addEventListener("click", () => showRooms(i + 3));
+  });
   const logContainer = document.querySelector(".image-container");
   logContainer.innerHTML = `
           <img
@@ -649,13 +673,22 @@ const seCoords = [{ x: [212, 470], y: [106, 148] }];
 const financeCoords = [{ x: [182, 450], y: [288, 340] }];
 const devCoords = [{ x: [424, 586], y: [150, 276] }];
 
-const toggleZIndex = (elem, value = false) => {
+const toggleZIndex = (elem, elem2, value = false) => {
   let zIndex = "-1";
+  let display = "none";
   if (value) {
     zIndex = "1";
   }
+
+  if (value) {
+    display = "block";
+  }
   if (elem.style.zIndex !== zIndex) {
     elem.style.zIndex = zIndex;
+    elem2.style.display = "block";
+  }
+  if (elem2.style.display !== display) {
+    elem2.style.display = display;
   }
 };
 
@@ -668,32 +701,37 @@ const perimeterMouseover = (event) => {
   const financeRoom = document.getElementById("financeRoom");
   const devRoom = document.getElementById("devRoom");
 
+  const ceoMessage = document.querySelector(".side-ceo");
+  const softMessage = document.querySelector(".side-softeng");
+  const financeMessage = document.querySelector(".side-finance");
+  const devopsMessage = document.querySelector(".side-devops");
+
   if (isWithin(base, ceoCoords)) {
-    toggleZIndex(ceoRoom, true);
+    toggleZIndex(ceoRoom, ceoMessage, true);
     return;
   } else {
-    toggleZIndex(ceoRoom, false);
+    toggleZIndex(ceoRoom, ceoMessage, false);
   }
 
   if (isWithin(base, seCoords)) {
-    toggleZIndex(seRoom, true);
+    toggleZIndex(seRoom, softMessage, true);
     return;
   } else {
-    toggleZIndex(seRoom, false);
+    toggleZIndex(seRoom, softMessage, false);
   }
 
   if (isWithin(base, financeCoords)) {
-    toggleZIndex(financeRoom, true);
+    toggleZIndex(financeRoom, financeMessage, true);
     return;
   } else {
-    toggleZIndex(financeRoom, false);
+    toggleZIndex(financeRoom, financeMessage, false);
   }
 
   if (isWithin(base, devCoords)) {
-    toggleZIndex(devRoom, true);
+    toggleZIndex(devRoom, devopsMessage, true);
     return;
   } else {
-    toggleZIndex(devRoom, false);
+    toggleZIndex(devRoom, devopsMessage, false);
   }
 
   return;
@@ -729,6 +767,21 @@ const isWithin = (event, coords) => {
   return within;
 };
 
+const showTickToCompletedRoomQuiz = () => {
+  const elemSoft = document.querySelector(".confirm-completion-softeng");
+  const elemFinance = document.querySelector(".confirm-completion-finance");
+  const elemDevops = document.querySelector(".confirm-completion-devops");
+  if (devopsQuiz) {
+    elemDevops.style.display = "block";
+  }
+
+  if (softEngQuiz) {
+    elemSoft.style.display = "block";
+  }
+  if (financeQuiz) {
+    elemFinance.style.display = "block";
+  }
+};
 // devops screen templates and handler
 let devopsQuestionNo = 1;
 const devOpsScreenHandler = () => {
@@ -995,7 +1048,7 @@ const ceoScreenHandler = () => {
   } else {
     popUpOffical(
       "Warning",
-      "The CEO room is closed. First complete the questionnaire."
+      "Please visit the other departments and visit the CEO once this has been completed."
     );
   }
 };

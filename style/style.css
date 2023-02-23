@@ -368,6 +368,100 @@ body {
     transform: scale(1);
   }
 }
+.main-image-container {
+  width: 700px;
+  margin: auto;
+  overflow: hidden;
+  position: relative;
+  z-index: 10;
+}
+.main-image-container__bg {
+  width: 100%;
+  height: 100%;
+}
+.main-image-container__overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  cursor: pointer;
+}
+
+area {
+  background-color: green;
+  padding: 1rem;
+}
+
+.confirm-completion {
+  margin: 1rem 0;
+  position: absolute;
+  z-index: 100;
+  color: #a3ea2a;
+  font-size: 3rem;
+  background-color: white;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+}
+.confirm-completion i {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.confirm-completion-softeng {
+  top: -1%;
+  left: 50%;
+  display: none;
+}
+
+.confirm-completion-devops {
+  top: 40%;
+  left: 85%;
+  display: none;
+}
+
+.confirm-completion-finance {
+  top: 85%;
+  left: 43%;
+  display: none;
+}
+
+.sides {
+  position: absolute;
+  background-color: black;
+  padding: 0.5rem 1rem;
+  border-radius: 1px;
+  border: 1px solid white;
+  display: none;
+  z-index: 1000;
+}
+.sides b {
+  word-break: keep-all;
+  color: #a3ea2a;
+}
+
+.side-ceo {
+  top: 47%;
+  left: 4%;
+}
+
+.side-softeng {
+  right: 33%;
+  top: 2%;
+}
+
+.side-finance {
+  bottom: 0%;
+  left: 37%;
+}
+
+.side-devops {
+  bottom: 50%;
+  right: 5%;
+}
+
 @media screen and (max-width: 1200px) {
   .offical-header {
     padding: 1.2rem 0;
@@ -396,6 +490,9 @@ body {
   }
 }
 @media screen and (max-width: 750px) {
+  .confirm-completion-finance {
+    top: 82%;
+  }
   .room-image-responsive {
     height: auto !important;
   }
@@ -423,26 +520,4 @@ body {
   .btn-container input[type=submit] {
     width: 80%;
   }
-}
-.main-image-container {
-  width: 700px;
-  margin: auto;
-  overflow: auto;
-  position: relative;
-}
-.main-image-container__bg {
-  width: 100%;
-  height: 100%;
-}
-.main-image-container__overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: -1;
-  cursor: pointer;
-}
-
-area {
-  background-color: green;
-  padding: 1rem;
 }/*# sourceMappingURL=style.css.map */
