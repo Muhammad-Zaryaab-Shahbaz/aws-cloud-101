@@ -91,11 +91,11 @@ let shaffle = false;
 // screens utilties
 let screen = 1;
 
-const screenShow = (num) => {
+const screenShow = num => {
   screen = num;
   modulesHandler();
 };
-const showRooms = (value) => {
+const showRooms = value => {
   if (value === 3) screenShow(3);
   else if (value === 4) screenShow(4);
   else if (value === 5) screenShow(5);
@@ -144,7 +144,7 @@ const popUpOffical = (heading, message, lost, timer) => {
   const popContainer = document.querySelector(".popup-container");
   const closeBtn = document.querySelector(".popup-close");
 
-  closeBtn.addEventListener("click", (e) => {
+  closeBtn.addEventListener("click", e => {
     wrapper.style.opacity = "1";
 
     if (lost) {
@@ -166,7 +166,7 @@ const popUpOffical = (heading, message, lost, timer) => {
     }
   });
 };
-const popUpOfficalIntroduction = (message) => {
+const popUpOfficalIntroduction = message => {
   if (document.querySelector(".popup-container")) {
     document.querySelector(".popup-container").remove();
   }
@@ -188,14 +188,14 @@ const popUpOfficalIntroduction = (message) => {
   const popContainer = document.querySelector(".popup-container");
   const closeBtn = document.querySelector(".popup-close");
 
-  closeBtn.addEventListener("click", (e) => {
+  closeBtn.addEventListener("click", e => {
     wrapper.style.opacity = "1";
     popContainer.remove();
   });
 };
 
 // popup Quiz question
-const showQuizQuestion = (arr) => {
+const showQuizQuestion = arr => {
   if (arr.length === 2) {
     return `
     <div class="quiz__options-container ">
@@ -368,11 +368,11 @@ const addingStrikes = () => {
   const strikeRemaining = document.querySelector(".strikeRemaining");
   const tooltip = document.querySelector("#tooltip");
 
-  strikeRemaining.addEventListener("mouseenter", function () {
+  strikeRemaining.addEventListener("mouseenter", function() {
     tooltip.style.display = "block";
   });
 
-  strikeRemaining.addEventListener("mouseleave", function () {
+  strikeRemaining.addEventListener("mouseleave", function() {
     tooltip.style.display = "none";
   });
 };
@@ -390,7 +390,7 @@ const showRemainingAttemps = () => {
 };
 
 // after losing all the strikes reseting the states of varaible&structure
-const goToHomePageAfterLosing = (modal) => {
+const goToHomePageAfterLosing = modal => {
   valid = false;
   totalAtemps = 0;
   const ui = document.querySelector("#main-content");
@@ -517,8 +517,8 @@ const correctWrongChecker = (el, correct) => {
 };
 
 // setting the default color to question option
-const defaultOptions = (options) => {
-  options.forEach((el) => {
+const defaultOptions = options => {
+  options.forEach(el => {
     el.style.background = "#525a6a";
     el.children[0].style.background = "#525a6a";
     el.children[1].style.background = "#525a6a";
@@ -533,8 +533,7 @@ const firstScreenTemp = () => {
     <h2 class="font-heading green-light">Instructions</h2>
     <ul class="mt-4 px-8 list-disc">
         <li class="mb-3 leading-6">You have been tasked to develop a social media interaction website
-            where users can communicate with each other (More or fewer features of Twitter and
-            Facebook). You are tasked to get input from all the teams, prepare a feasibility report,
+            where users can communicate with each other (with features more or less equivalent to those on Twitter or Facebook). You are tasked to get input from all the teams, prepare a feasibility report,
             and present it to the CEO.
         </li>
         <li class="mb-3 leading-6">You will visit each department and will be asking certain questions.
@@ -567,7 +566,7 @@ const firstScreenHandler = () => {
 
   // adding listener to Start button
   const btn = document.querySelector(".start-btn");
-  btn.addEventListener("click", (e) => {
+  btn.addEventListener("click", e => {
     screenShow(2);
     popUpOfficalIntroduction(
       "Click on the Department to visit it.",
@@ -692,7 +691,7 @@ const toggleZIndex = (elem, elem2, value = false) => {
   }
 };
 
-const perimeterMouseover = (event) => {
+const perimeterMouseover = event => {
   const { offsetX, offsetY } = event;
   const base = { offsetX, offsetY };
 
@@ -808,7 +807,7 @@ const devOpsScreenHandler = () => {
   }, 500);
   const options = document.querySelectorAll(".quiz__options");
 
-  options.forEach((el) => {
+  options.forEach(el => {
     el.addEventListener("click", () => {
       defaultOptions(options);
 
@@ -867,7 +866,7 @@ const softEngScreenHandler = () => {
 
   const options = document.querySelectorAll(".quiz__options");
 
-  options.forEach((el) => {
+  options.forEach(el => {
     el.addEventListener("click", () => {
       defaultOptions(options);
 
@@ -927,7 +926,7 @@ const financeScreenHandler = () => {
   }, 500);
 
   const options = document.querySelectorAll(".quiz__options");
-  options.forEach((el) => {
+  options.forEach(el => {
     el.addEventListener("click", () => {
       if (question.answer === el.dataset.id) {
         financeResult.atemps.push(question);
@@ -948,7 +947,7 @@ const financeScreenHandler = () => {
 
 // ceo screen handler and templates
 let questionNo = 0;
-const questionAnswerReport = (questions) => {
+const questionAnswerReport = questions => {
   return questions.map((el, i) => {
     questionNo = questionNo + 1;
     return `

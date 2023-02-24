@@ -401,20 +401,16 @@ $typing-duration: 4s;
     cursor: pointer;
   }
 }
-area {
-  background-color: green;
-  padding: 1rem;
-}
 
 .confirm-completion {
   margin: 1rem 0;
   position: absolute;
   z-index: 100;
   color: $color-green-light;
-  font-size: 3rem;
+  font-size: 2rem;
   background-color: white;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 1.75rem;
+  height: 1.75rem;
   border-radius: 50%;
   i {
     position: absolute;
@@ -426,18 +422,18 @@ area {
 
 .confirm-completion-softeng {
   top: -1%;
-  left: 50%;
+  left: 51.5%;
   display: none;
 }
 .confirm-completion-devops {
-  top: 40%;
-  left: 85%;
+  top: 37.5%;
+  left: 86%;
   display: none;
 }
 
 .confirm-completion-finance {
-  top: 85%;
-  left: 43%;
+  top: 88%;
+  left: 44%;
   display: none;
 }
 
