@@ -75,7 +75,7 @@ let questionare = {
     {
       stage: false,
       question:
-        "The payment will be made to cloud service providers on a pay-as-you-go model, and the infrastructure will be expanded per the needs. Which of the following expense is optimally used in this case?",
+        "The payment will be made to cloud service providers on a pay-as-you-go model, and the infrastructure will be expanded per the needs. Which of the following expenses is optimally used in this case?",
       prompts: ["Operational", "Optional"],
       answer: "Optional",
       image: "finance",
