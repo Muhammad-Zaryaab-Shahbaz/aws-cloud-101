@@ -2,7 +2,8 @@
 * {
   margin: 0%;
   padding: 0%;
-  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
 }
 
 body {
@@ -12,15 +13,12 @@ body {
 }
 
 .wrapper {
-  border: 1px solid #ececec;
   background-color: #212c42;
-  min-height: 95vh;
-  border-radius: 10px;
+  min-height: 100vh;
 }
 
 .offical-header {
   background-color: #151c2b;
-  border-bottom: 0.1px solid rgba(236, 236, 236, 0.4784313725);
   padding: 1rem 0;
 }
 
@@ -81,13 +79,15 @@ body {
   padding: 1rem;
   margin-top: 1rem;
 }
+
 .btn-container button,
-.btn-container input[type=submit] {
+.btn-container input[type="submit"] {
   cursor: pointer;
   background-color: #525a6a;
   width: 50%;
   margin: auto;
   padding: 0.5rem 0;
+  -webkit-transition: 0.3s all ease-in-out;
   transition: 0.3s all ease-in-out;
   border-radius: 10px;
   font-weight: 400;
@@ -96,25 +96,29 @@ body {
   font-size: 1.2rem;
   font-family: "Source Sans Pro", "Ubuntu", sans-serif !important;
 }
+
 .btn-container button:hover,
-.btn-container input[type=submit]:hover {
+.btn-container input[type="submit"]:hover {
   background-color: #212c42;
   border: 1px solid #ececec;
 }
+
 .btn-container button:active,
-.btn-container input[type=submit]:active {
+.btn-container input[type="submit"]:active {
   outline: none;
 }
 
 .btn-container-2 {
   text-align: center;
 }
+
 .btn-container-2 button,
-.btn-container-2 input[type=submit] {
+.btn-container-2 input[type="submit"] {
   cursor: pointer;
   background-color: #525a6a;
   width: 100%;
   padding: 0.5rem 0;
+  -webkit-transition: 0.3s all ease-in-out;
   transition: 0.3s all ease-in-out;
   border-radius: 10px;
   font-weight: 400;
@@ -123,29 +127,46 @@ body {
   font-size: 1.2rem;
   font-family: "Source Sans Pro", "Ubuntu", sans-serif !important;
 }
+
 .btn-container-2 button:hover,
-.btn-container-2 input[type=submit]:hover {
+.btn-container-2 input[type="submit"]:hover {
   background-color: #212c42;
   outline: 1px solid #ececec;
   border: none;
 }
+
 .btn-container-2 button:active,
-.btn-container-2 input[type=submit]:active {
+.btn-container-2 input[type="submit"]:active {
   border: none;
 }
 
 .slide-bottom {
+  -webkit-animation: slide-bottom 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
   animation: slide-bottom 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+@-webkit-keyframes slide-bottom {
+  0% {
+    -webkit-transform: translateY(-100px);
+    transform: translateY(-100px);
+  }
+  100% {
+    -webkit-transform: translateY(0px);
+    transform: translateY(0px);
+  }
 }
 
 @keyframes slide-bottom {
   0% {
+    -webkit-transform: translateY(-100px);
     transform: translateY(-100px);
   }
   100% {
+    -webkit-transform: translateY(0px);
     transform: translateY(0px);
   }
 }
+
 .quiz__container {
   background-color: #151c2b;
   position: relative !important;
@@ -158,10 +179,17 @@ body {
   margin: auto;
   position: relative;
 }
+
 .quiz__question {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
   width: 80%;
   margin: auto;
   min-height: 110px;
@@ -170,6 +198,7 @@ body {
   z-index: 10;
   margin-bottom: 3rem;
 }
+
 .quiz__question h5 {
   z-index: 10000 !important;
   padding: 0rem 0;
@@ -177,6 +206,7 @@ body {
   width: 90%;
   margin: auto;
 }
+
 .quiz__slides {
   position: absolute;
   background-color: #212c42;
@@ -186,34 +216,47 @@ body {
   height: 100%;
   top: 0%;
 }
+
 .quiz__slides:nth-of-type(1) {
   left: -4%;
   -webkit-clip-path: polygon(25% 0%, 100% 0%, 100% 100%, 25% 100%, 0% 50%);
           clip-path: polygon(25% 0%, 100% 0%, 100% 100%, 25% 100%, 0% 50%);
 }
+
 .quiz__slides:nth-of-type(2) {
   bottom: 0%;
   -webkit-clip-path: polygon(0 0, 75% 0%, 100% 50%, 75% 100%, 0 100%);
           clip-path: polygon(0 0, 75% 0%, 100% 50%, 75% 100%, 0 100%);
   right: -4%;
 }
+
 .quiz__options-container {
+  display: -ms-grid;
   display: grid;
   width: 80%;
   gap: 20px 80px;
-  grid-template-columns: 1fr 1fr;
+  -ms-grid-columns: 1fr 1fr;
+      grid-template-columns: 1fr 1fr;
   margin: auto;
 }
+
 .quiz__options {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  align-items: center;
-  justify-content: start;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: start;
   width: 100%;
   min-height: 50px;
   background-color: #525a6a;
   position: relative;
   cursor: pointer;
 }
+
 .quiz__options p {
   width: 100%;
   z-index: 100;
@@ -221,6 +264,7 @@ body {
   text-align: center;
   line-height: 1.24rem;
 }
+
 .quiz__options__slides {
   z-index: 10;
   position: absolute;
@@ -229,11 +273,13 @@ body {
   height: 100%;
   top: 0%;
 }
+
 .quiz__options__slides:nth-of-type(1) {
   left: -4%;
   -webkit-clip-path: polygon(25% 0%, 100% 0%, 100% 100%, 25% 100%, 0% 50%);
           clip-path: polygon(25% 0%, 100% 0%, 100% 100%, 25% 100%, 0% 50%);
 }
+
 .quiz__options__slides:nth-of-type(2) {
   bottom: 0%;
   -webkit-clip-path: polygon(0 0, 75% 0%, 100% 50%, 75% 100%, 0 100%);
@@ -242,6 +288,7 @@ body {
 }
 
 .progress-container {
+  -webkit-transition: 3s all !important;
   transition: 3s all !important;
 }
 
@@ -290,35 +337,49 @@ body {
 }
 
 .special-quiz__options-container {
-  grid-template-columns: 1fr;
+  -ms-grid-columns: 1fr;
+      grid-template-columns: 1fr;
   width: 50%;
   margin-top: 1rem;
 }
 
 .quiz__options:hover {
+  -webkit-transition: 0s all ease-in-out;
   transition: 0s all ease-in-out;
   background-color: #212c42;
   border: none;
 }
+
 .quiz__options:hover p {
   background-color: #212c42;
 }
+
 .quiz__options:hover .quiz__options__slides {
   background-color: #212c42;
 }
+
 .quiz__options:hover__slides {
   background-color: #212c42;
 }
 
 .room-back-image {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
   width: 620px;
   height: 95vh;
   margin: auto;
-  flex: 1;
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
 }
+
 .room-back-image img {
   -o-object-fit: cover;
      object-fit: cover;
@@ -326,20 +387,33 @@ body {
   border-radius: 8px;
 }
 
+@-webkit-keyframes typing {
+  from {
+    width: 100%;
+  }
+  90%,
+  to {
+    width: 0;
+  }
+}
+
 @keyframes typing {
   from {
     width: 100%;
   }
-  90%, to {
+  90%,
+  to {
     width: 0;
   }
 }
+
 .typing-slider {
   position: relative;
 }
 
 .typing-slider h4 {
-  animation: slide 4s;
+  -webkit-animation: slide 4s;
+          animation: slide 4s;
 }
 
 .typing-slider h4::after {
@@ -349,25 +423,47 @@ body {
   right: 0;
   bottom: 0;
   background-color: #151c2b;
-  animation: typing 4s, cursor 4s;
+  -webkit-animation: typing 4s, cursor 4s;
+          animation: typing 4s, cursor 4s;
 }
 
 .room-image {
-  animation: zoom-out-animation 0.8s ease-out;
-  transform-origin: center center;
+  -webkit-animation: zoom-out-animation 0.8s ease-out;
+          animation: zoom-out-animation 0.8s ease-out;
+  -webkit-transform-origin: center center;
+          transform-origin: center center;
+}
+
+@-webkit-keyframes zoom-out-animation {
+  0% {
+    -webkit-transform: scale(1.2);
+            transform: scale(1.2);
+  }
+  50% {
+    -webkit-transform: scale(1.1);
+            transform: scale(1.1);
+  }
+  100% {
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
 }
 
 @keyframes zoom-out-animation {
   0% {
-    transform: scale(1.2);
+    -webkit-transform: scale(1.2);
+            transform: scale(1.2);
   }
   50% {
-    transform: scale(1.1);
+    -webkit-transform: scale(1.1);
+            transform: scale(1.1);
   }
   100% {
-    transform: scale(1);
+    -webkit-transform: scale(1);
+            transform: scale(1);
   }
 }
+
 .main-image-container {
   width: 700px;
   margin: auto;
@@ -375,10 +471,12 @@ body {
   position: relative;
   z-index: 10;
 }
+
 .main-image-container__bg {
   width: 100%;
   height: 100%;
 }
+
 .main-image-container__overlay {
   position: absolute;
   top: 0;
@@ -398,11 +496,13 @@ body {
   height: 1.75rem;
   border-radius: 50%;
 }
+
 .confirm-completion i {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
 }
 
 .confirm-completion-softeng {
@@ -432,6 +532,7 @@ body {
   display: none;
   z-index: 1000;
 }
+
 .sides b {
   word-break: keep-all;
   color: #a3ea2a;
@@ -462,6 +563,7 @@ body {
     padding: 1.2rem 0;
   }
 }
+
 @media screen and (max-width: 1050px) {
   .quiz__question,
   .quiz__options-container {
@@ -471,7 +573,8 @@ body {
     position: relative !important;
     left: 0% !important;
     width: 100% !important;
-    transform: translate(0%) !important;
+    -webkit-transform: translate(0%) !important;
+            transform: translate(0%) !important;
   }
   .ceoroom-popup-container .popUp {
     margin: 0%;
@@ -484,6 +587,7 @@ body {
     left: 0%;
   }
 }
+
 @media screen and (max-width: 750px) {
   .confirm-completion-finance {
     top: 82%;
@@ -499,10 +603,19 @@ body {
   }
   .offical-header {
     padding: 0.5rem 0 !important;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
   }
   .offical-header .image-container {
     position: relative;
@@ -512,7 +625,8 @@ body {
     width: 600px !important;
   }
   .btn-container button,
-  .btn-container input[type=submit] {
+  .btn-container input[type="submit"] {
     width: 80%;
   }
-}/*# sourceMappingURL=style.css.map */
+}
+/*# sourceMappingURL=style.css.map */

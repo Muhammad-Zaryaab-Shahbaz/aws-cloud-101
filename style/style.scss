@@ -21,15 +21,12 @@ body {
 
 // wraper layout
 .wrapper {
-  border: 1px solid #ececec;
   background-color: $color-main;
-  min-height: 95vh;
-  border-radius: 10px;
+  min-height: 100vh;
 }
 
 .offical-header {
   background-color: $color-secondary;
-  border-bottom: 0.1px solid #ececec7a;
   padding: 1rem 0;
 }
 #tooltip {
